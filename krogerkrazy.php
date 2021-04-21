@@ -75,6 +75,16 @@ require plugin_dir_path( __FILE__ ) . 'includes/class-krogerkrazy.php';
  */
 function run_krogerkrazy() {
 
+	require 'plugin-update-checker/plugin-update-checker.php';
+	$pluginUpdateChecker = Puc_v4_Factory::buildUpdateChecker(
+		'https://github.com/jefferykarbowski/Kroger-Krazy',
+		__FILE__,
+		'kroger-krazy'
+	);
+	
+	$pluginUpdateChecker->setBranch('main');
+	$pluginUpdateChecker->setAuthentication('55fc9310055924d57bd72f9d496d820f3036829e');
+
 	$plugin = new Krogerkrazy();
 	$plugin->run();
 
