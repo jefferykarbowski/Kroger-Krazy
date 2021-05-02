@@ -31,6 +31,7 @@ class Krogerkrazy_Activator {
 	 */
 	public static function activate() {
 
+
 	}
 
 }

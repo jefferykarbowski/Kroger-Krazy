@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'KROGERKRAZY_VERSION', '1.0.0' );
+define( 'KROGERKRAZY_VERSION', '1.0.1' );
 
 /**
  * The code that runs during plugin activation.
@@ -81,7 +81,7 @@ function run_krogerkrazy() {
 		__FILE__,
 		'kroger-krazy'
 	);
-	
+
 	$pluginUpdateChecker->setBranch('main');
 	$pluginUpdateChecker->setAuthentication('55fc9310055924d57bd72f9d496d820f3036829e');
 

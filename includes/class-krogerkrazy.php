@@ -76,6 +76,7 @@ class Krogerkrazy {
 
 		$this->load_dependencies();
 		$this->set_locale();
+		$this->setup_rest_api();
 		$this->define_admin_hooks();
 		$this->define_public_hooks();
 
@@ -98,7 +99,7 @@ class Krogerkrazy {
 	 * @access   private
 	 */
 	private function load_dependencies() {
-
+		
 		wp_register_style('material-design-icons', '//cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css');
 
 		wp_register_style('vuetify', '//cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css');
@@ -115,6 +116,12 @@ class Krogerkrazy {
 
 
 		/**
+		 * The class responsible for extending Wordpress's Rest API.
+		 */
+		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-krogerkrazy-rest-api.php';
+
+
+		/**
 		 * The class responsible for orchestrating the actions and filters of the
 		 * core plugin.
 		 */
@@ -125,6 +132,8 @@ class Krogerkrazy {
 		 * of the plugin.
 		 */
 		require_once plugin_dir_path( dirname( __FILE__ ) ) . 'includes/class-krogerkrazy-i18n.php';
+
+
 
 		/**
 		 * The class responsible for defining all actions that occur in the admin area.
@@ -139,9 +148,8 @@ class Krogerkrazy {
 
 
 
-
-
 		$this->loader = new Krogerkrazy_Loader();
+
 
 	}
 
@@ -161,6 +169,26 @@ class Krogerkrazy {
 		$this->loader->add_action( 'plugins_loaded', $plugin_i18n, 'load_plugin_textdomain' );
 
 	}
+
+
+
+	/**
+	 * Extend WP's Rest API
+	 *
+	 * @since    1.0.0
+	 * @access   private
+	 */
+	private function setup_rest_api() {
+
+		$krogerkrazy_rest_api = new KrogerKrazy_Rest_API();
+		$this->loader->add_action( 'rest_url_prefix', $krogerkrazy_rest_api, 'kk_api_slug' );
+		$this->loader->add_action( 'rest_api_init', $krogerkrazy_rest_api, 'register_routes' );
+
+
+	}
+
+
+
 
 	/**
 	 * Register all of the hooks related to the admin area functionality
