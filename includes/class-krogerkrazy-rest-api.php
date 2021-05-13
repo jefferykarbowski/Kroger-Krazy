@@ -77,14 +77,15 @@ class KrogerKrazy_Rest_API extends WP_REST_Controller {
 		$list_meta_fields = array(
 			'item_order',
 			'expires',
+			'updated',
 		);
 		//Iterate through all fields and add register each of them to the API
 		foreach ($list_meta_fields as $field) {
 			register_rest_field( 'list',
 				$field,
 				array(
-					'get_callback'    => array( $this, 'kk_get_meta'),
-					'update_callback' => array( $this, 'kk_update_meta'),
+					'get_callback'    => array( $this, 'kk_get_term_meta'),
+					'update_callback' => array( $this, 'kk_update_term_meta'),
 					'schema'          => null,
 				)
 			);
@@ -95,7 +96,15 @@ class KrogerKrazy_Rest_API extends WP_REST_Controller {
 			'single' => true,
 			'show_in_rest' => true,
 		);
-		register_meta( 'list_item', 'item_order', $args );
+		register_term_meta( 'list', 'item_order', $args );
+
+		$args = array(
+			'type' => 'string',
+			'description' => 'Last Updated',
+			'single' => true,
+			'show_in_rest' => true,
+		);
+		register_term_meta( 'list', 'updated', $args );
 
 		$args = array(
 			'type' => 'string',
@@ -103,7 +112,7 @@ class KrogerKrazy_Rest_API extends WP_REST_Controller {
 			'single' => true,
 			'show_in_rest' => true,
 		);
-		register_meta( 'list_item', 'expires', $args );
+		register_term_meta( 'list', 'expires', $args );
 
 
 	}
@@ -121,7 +130,10 @@ class KrogerKrazy_Rest_API extends WP_REST_Controller {
 	 * @return mixed
 	 */
 	public function kk_get_meta( $object, $field_name ) {
-		return get_post_meta( $object[ 'id' ], $field_name );
+			return get_post_meta( $object[ 'id' ], $field_name );
+	}
+	public function kk_get_term_meta( $object, $field_name ) {
+		return get_term_meta( $object[ 'id' ], $field_name );
 	}
 
 
@@ -141,6 +153,13 @@ class KrogerKrazy_Rest_API extends WP_REST_Controller {
 			return true;
 		}
 		return update_post_meta( $object->ID, $field_name, maybe_serialize( strip_tags( $value ) ) );
+	}
+
+	public function kk_update_term_meta( $value, $object, $field_name ) {
+		if ( !isset($value) ) {
+			return true;
+		}
+		return update_term_meta( $object->ID, $field_name, maybe_serialize( strip_tags( $value ) ) );
 	}
 
 }

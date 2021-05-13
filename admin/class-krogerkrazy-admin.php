@@ -55,27 +55,16 @@ class Krogerkrazy_Admin {
 	}
 
 	/**
-	 * Register the stylesheets for the admin area.
-	 *
-	 * @since    1.0.0
-	 */
-	public function enqueue_styles() {
-		wp_enqueue_style( 'material-design-icons' );
-		wp_enqueue_style( 'vuetify' );
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/krogerkrazy-admin.css', array(), null, 'all' );
-
-	}
-
-	/**
 	 * Register the JavaScript for the admin area.
 	 *
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
-
 		wp_enqueue_script('vue-polyfill');
 		wp_enqueue_script('vue');
-		wp_enqueue_script('vuetify');
+		wp_enqueue_script('bootstrap-vue');
+		wp_enqueue_script('bootstrap-vue-icons');
+		wp_enqueue_script('v-calendar');
 		wp_enqueue_script('sortable');
 		wp_enqueue_script('vue-draggable');
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/krogerkrazy-admin.js', array( 'vue' ), null, true );
@@ -87,6 +76,19 @@ class Krogerkrazy_Admin {
 				'nonce' => wp_create_nonce('wp_rest')
 			)
 		);
+
+	}
+
+	/**
+	 * Register the stylesheets for the admin area.
+	 *
+	 * @since    1.0.0
+	 */
+	public function enqueue_styles() {
+		wp_enqueue_style( 'bootstrap' );
+		wp_enqueue_style( 'bootstrap-vue' );
+		wp_enqueue_style( 'bootstrap-vue-icons' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/krogerkrazy-admin.css', array(), null, 'all' );
 
 	}
 

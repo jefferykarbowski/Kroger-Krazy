@@ -99,20 +99,25 @@ class Krogerkrazy {
 	 * @access   private
 	 */
 	private function load_dependencies() {
-		
-		wp_register_style('material-design-icons', '//cdn.jsdelivr.net/npm/@mdi/font@4.x/css/materialdesignicons.min.css');
 
-		wp_register_style('vuetify', '//cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.min.css');
+		wp_register_style('bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css', array(), $this->version, 'all');
 
-		wp_register_script('vue-polyfill', '//polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver', array( 'jquery'), '3.96.0', true);
+		wp_register_style('bootstrap-vue', '//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css', array(), $this->version, 'all');
 
-		wp_register_script('vue', '//unpkg.com/vue@latest/dist/vue.min.js', array( 'jquery'), '2.6.12', true);
+		wp_register_script('vue-polyfill', '//polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver', [], '3.96.0');
 
-		wp_register_script('vuetify', '//cdn.jsdelivr.net/npm/vuetify@2.x/dist/vuetify.js', array( 'vue'), '2.4.11', true);
+		wp_register_script('vue', '//unpkg.com/vue@latest/dist/vue.min.js', [], '2.6.12');
 
-		wp_register_script('sortable', '//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js', array( 'vue', 'vuetify'), '1.8.4', true);
+		wp_register_script('bootstrap-vue', '//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js', [], '2.20.0');
 
-		wp_register_script('vue-draggable', '//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js', array('vue', 'vuetify', 'sortable'), '2.20.0', true);
+		wp_register_script('bootstrap-vue-icons', '//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js', [], '1.2.0');
+
+		// Bootstrap's Datepicker is terrible.
+		wp_register_script('v-calendar', '//unpkg.com/v-calendar', [], '1.6.2');
+
+		wp_register_script('sortable', '//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js', array( 'jquery'), '1.8.4', true);
+
+		wp_register_script('vue-draggable', '//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js', array('jquery', 'sortable'), '2.20.0', true);
 
 
 		/**

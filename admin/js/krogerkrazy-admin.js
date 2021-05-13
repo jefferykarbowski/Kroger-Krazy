@@ -1,17 +1,90 @@
+
+const createSortable = (el, options, vnode) => {
+	return Sortable.create(el, {
+		...options
+	})
+}
+
+const sortable = {
+	name: 'sortable',
+	bind(el, binding, vnode) {
+		const table = el
+		table._sortable = createSortable(table.querySelector("tbody"), binding.value, vnode)
+	}
+}
+
 let vm = new Vue({
 	el: '#vueApp',
-	vuetify: new Vuetify(),
+	directives: { sortable },
 	data() {
 		return {
+			listName: '',
+			listExpiry: '',
+			listUpdating: false,
+			expires: '',
 			lists: [],
+			dynamicLists: [],
 			listItems: [],
 			listId: '',
+			selectedPastList: 'Current List',
+			pastLists: ['Current List', '30 Days +', '60 Days +', '90 Days +', '120 Days +', 'My Archived Lists',],
 			selectedItem: 1,
-			items: [
-				{ text: 'Real-Time', icon: 'mdi-clock' },
-				{ text: 'Audience', icon: 'mdi-account' },
-				{ text: 'Conversions', icon: 'mdi-flag' },
+			sortableOptions: {
+				chosenClass: 'is-selected'
+			},
+			fields: [
+				{
+					key: 'name',
+					label: 'List Name',
+					sortable: true,
+					tdClass: 'w-50',
+				},
+				{
+					key: 'shortcode',
+					label: 'Shortcode',
+					sortable: false,
+					tdClass: 'w-50',
+				},
+				{
+					key: 'expires[0]',
+					label: 'Expires',
+					sortable: true,
+				},
+				{
+					key: 'updated[0]',
+					label: 'Updated',
+					sortable: true,
+				},
+				{
+					key: 'buttons',
+					label: '',
+					tdClass: 'no-wrap',
+				},
 			],
+			defaultTableProps: {
+				sortIconLeft:true,
+				ref:"table",
+				striped:"true",
+				tbodyTransitionProps:this.transProps,
+				noLocalSorting: false,
+				showEmpty: {
+					type: Boolean,
+					default: false
+				},
+				emptyText: {
+					type: String,
+					default: 'There are no agencies to show'
+				},
+				emptyFilteredText: {
+					type: String,
+					default: 'There are no agencies matching your request'
+				},
+			},
+			componentKey: 0,
+			modelConfig: {
+				type: 'string',
+				mask: 'YYYY-MM-DD', // Uses 'iso' if missing
+			},
 		}
 	},
 
@@ -24,6 +97,7 @@ let vm = new Vue({
 		})
 	},
 
+
 	methods: {
 		async fetchLists() {
 			const params = '?per_page=100'
@@ -32,6 +106,9 @@ let vm = new Vue({
 					return res.json()
 				})
 				.then(lists => lists)
+			this.lists.forEach(element => {
+				this.dynamicLists.push({...element, sharing: false});
+			})
 		},
 
 		async fetchListItems() {
@@ -44,25 +121,50 @@ let vm = new Vue({
 		},
 
 
-		addList(e) {
-			const formData = new FormData()
-			formData.append('status', 'publish')
-			formData.append('name', 'My New List')
-			formData.append('expires', 'Expires Date Here')
-			this.createRecord('lists',this.lists, formData)
+
+		submit : function(){
+			this.$refs.form.submit()
 		},
 
 
-		updateList(id) {
-			let formData = new FormData()
-			formData.append('name', 'Updated List')
-			this.updateRecord(id, 'lists', this.lists, formData)
+		addList(e) {
+			e.preventDefault()
+			const formData = new FormData(e.target)
+			const date = new Date()
+			formData.append('status', 'publish')
+			formData.append('meta[expires]', formData.get('expires'))
+			formData.append('meta[updated]', ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear())
+			this.createRecord('lists',this.dynamicLists, formData)
+			this.forceRerenderForm()
+		},
+
+
+		duplicateList(item) {
+			const formData = new FormData()
+			const date = new Date()
+			formData.append('status', 'publish')
+			formData.append('name', item.name + ' (duplicate)')
+			formData.append('meta[expires]', item.expires[0])
+			formData.append('meta[updated]', ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear())
+			this.createRecord('lists',this.dynamicLists, formData)
+			this.forceRerenderForm()
+		},
+
+
+		updateList(e) {
+			e.preventDefault()
+			let formData = new FormData(e.target)
+			const date = new Date()
+			formData.append('meta[expires]', formData.get('expires'))
+			formData.append('meta[updated]', ((date.getMonth() > 8) ? (date.getMonth() + 1) : ('0' + (date.getMonth() + 1))) + '/' + ((date.getDate() > 9) ? date.getDate() : ('0' + date.getDate())) + '/' + date.getFullYear())
+			this.updateRecord(formData.get('id'), 'lists', this.dynamicLists, formData)
+			this.forceRerenderForm()
 		},
 
 
 		deleteList(id) {
 			let formData = new FormData()
-			this.deleteRecord(id, 'lists', this.lists, formData)
+			this.deleteRecord(id, 'lists', this.dynamicLists, formData)
 		},
 
 		addListItem(e) {
@@ -87,6 +189,25 @@ let vm = new Vue({
 		deleteListItem(id) {
 			let formData = new FormData()
 			this.deleteRecord(id, 'list_items', this.listItems, formData)
+		},
+
+
+		toggleDetails(row) {
+			if(row._showDetails){
+				this.$set(row, '_showDetails', false)
+			}else{
+				this.dynamicLists.forEach(item => {
+					this.$set(item, '_showDetails', false)
+				})
+				this.$nextTick(() => {
+
+					this.$set(row, '_showDetails', true)
+					this.listId = row.id
+					this.listName = row.name
+					this.listExpiry = row.expires[0]
+
+				})
+			}
 		},
 
 
@@ -164,6 +285,48 @@ let vm = new Vue({
 
 
 
+
+		showConfirmDelete(id, deleteType) {
+			let _this = this
+			let msg
+			msg = 'Please confirm that you want to delete this List.'
+			const opts = {
+				title: 'Please Confirm',
+				size: 'sm',
+				buttonSize: 'sm',
+				okVariant: 'danger',
+				okTitle: 'YES',
+				cancelTitle: 'NO',
+				footerClass: 'p-2',
+				hideHeaderClose: false,
+				centered: true,
+				noCloseOnBackdrop: true,
+				noCloseOnEsc: true,
+			}
+			this.$bvModal.msgBoxConfirm(msg, opts)
+				.then(value => {
+					if (value) {
+						if (deleteType === 'list') {
+							_this.deleteRecord(id, endpoint = 'lists', dataset = _this.dynamicLists, force = true)
+						}
+					}
+				})
+				.catch(err => {
+					// An error occurred
+				})
+		},
+
+
+		forceRerenderForm() {
+			this.componentKey += 1
+		},
+
+
+
+		htmlDecode(input) {
+			let doc = new DOMParser().parseFromString(input, "text/html")
+			return doc.documentElement.textContent
+		},
 
 
 
