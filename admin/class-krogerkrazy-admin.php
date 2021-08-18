@@ -61,12 +61,19 @@ class Krogerkrazy_Admin {
 	 */
 	public function enqueue_scripts() {
 		wp_enqueue_script('vue-polyfill');
+		wp_enqueue_script('quilljs');
+		wp_enqueue_script('quill-image-resize');
 		wp_enqueue_script('vue');
+		wp_enqueue_script('vue-quill-editor');
 		wp_enqueue_script('bootstrap-vue');
 		wp_enqueue_script('bootstrap-vue-icons');
 		wp_enqueue_script('v-calendar');
 		wp_enqueue_script('sortable');
 		wp_enqueue_script('vue-draggable');
+		wp_enqueue_script('vue');
+		wp_enqueue_script('v-mask');
+		wp_enqueue_script('v-mask-plugins');
+		wp_enqueue_script('he');
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/krogerkrazy-admin.js', array( 'vue' ), null, true );
 		wp_localize_script(
 			$this->plugin_name,
@@ -85,6 +92,9 @@ class Krogerkrazy_Admin {
 	 * @since    1.0.0
 	 */
 	public function enqueue_styles() {
+		wp_enqueue_style( 'quilljs' );
+		wp_enqueue_style( 'quill-snow' );
+		wp_enqueue_style( 'quill-bubble' );
 		wp_enqueue_style( 'bootstrap' );
 		wp_enqueue_style( 'bootstrap-vue' );
 		wp_enqueue_style( 'bootstrap-vue-icons' );
@@ -108,6 +118,70 @@ class Krogerkrazy_Admin {
 	public function printable_lists_callback() {
 
 		include plugin_dir_path(__FILE__) . 'partials/krogerkrazy-admin-display.php';
+
+	}
+
+
+	public function krogerkrazy_meta_box_callback() {
+		$screen = get_current_screen();
+		add_meta_box(
+			'krogerkrazy_meta_box',
+			__( 'Embed Printable Lists', 'textdomain' ),
+			array( $this, 'add_meta_box_callback' ),
+			$screen,
+			'side',
+			'high'
+		);
+	}
+
+
+	public function add_meta_box_callback() {
+		{
+			?>
+			<fieldset id="pembed_postbox">
+				<div>
+					<label>Title</label>
+					<input type="text" id="pembed_title" name="pembed_title" value="" style="width: 100%;" />
+				</div>
+				<div>
+					<label>Description</label>
+					<textarea id="pembed_desc" name="pembed_desc" value="" style="width: 100%; height: 80px;" /></textarea>
+				</div>
+				<div>
+					<label>Final Price</label>
+					<input type="text" id="pembed_final_price" name="pembed_final_price" value="" style="width: 100%;" />
+				</div>
+				<div style="margin-top: 4px;">
+					<input id="pembed_create" type="button" value="&laquo; Insert Embed Code" class='button' onClick="pembed_insertCode();"/>
+				</div>
+			</fieldset>
+			<script>
+                function pembed_insertCode()
+                {
+                    var code = "";
+
+                    code += "[kk-deal";
+                    if( jQuery("#pembed_title").val() == "" )
+                    {
+                        alert("Please add a title.");
+                        return;
+                    }
+                    else if( jQuery("#pembed_desc").val() == "" )
+                    {
+                        alert("Please add a description.");
+                        return;
+                    }
+                    code += " title=\"" + jQuery("#pembed_title").val() + "\" ";
+                    code += "description=\"" + jQuery("#pembed_desc").val() + "\" ";
+                    code += "final_price=\"" + jQuery("#pembed_final_price").val() + "\" ";
+
+                    code += "]";
+                    parent.tinyMCE.activeEditor.execCommand("mceInsertContent",false, code);
+                }
+			</script>
+			<?php
+
+		}
 
 	}
 

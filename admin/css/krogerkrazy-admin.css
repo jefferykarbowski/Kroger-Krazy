@@ -1,1 +1,55 @@
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+    -webkit-appearance: none;
+    margin: 0;
+}
+
+/* Firefox */
+input[type=number] {
+    -moz-appearance: textfield;
+}
+
+.taxonomy-list_headings .form-field.term-slug-wrap,
+.taxonomy-list_headings .form-field.term-parent-wrap,
+.taxonomy-list_headings .form-field.term-description-wrap,
+.taxonomy-list_headings .tablenav,
+.taxonomy-list_headings .search-form,
+.taxonomy-list_headings #description,
+.taxonomy-list_headings .column-description,
+.taxonomy-list_headings td.description,
+.taxonomy-list_headings #slug,
+.taxonomy-list_headings .column-slug,
+.taxonomy-list_headings td.slug,
+.taxonomy-list_headings #posts,
+.taxonomy-list_headings .column-posts,
+.taxonomy-list_headings td.posts,
+.taxonomy-list_headings .check-column,
+.taxonomy-list_headings .editinline
+{display: none;}
+
 #vueApp .theme--light.v-application {background: transparent}
+
+.item-buttons {position: absolute!important; left: 0}
+
+.b-popover.popover {background:none; border:none; left:44px!important; margin-top:32px}
+.popover .arrow {display: none}
+
+.ql-snow .ql-tooltip {z-index: 9999;}
+
+.ql-container {min-height:100px}
+
+[v-cloak] > * { display:none; }
+[v-cloak]::before {
+    content: "";
+    color: #091b59;
+    display:inline-block;
+    width:2rem;
+    height:2rem;
+    vertical-align:text-bottom;
+    border:.25em solid;
+    border-right:.25em solid transparent;
+    border-radius:50%;
+    -webkit-animation:spinner-border .75s linear infinite;
+    animation:spinner-border .75s linear infinite
+}
