@@ -1,194 +1,3 @@
-/* Variables */
-:root {
-
-
-
-  /* Colors */
-  --global--color-black: #000;
-  --global--color-dark-gray: #28303d;
-  --global--color-gray: #39414d;
-  --global--color-light-gray: #f0f0f0;
-  --global--color-green: #d1e4dd;
-  --global--color-blue: #d1dfe4;
-  --global--color-purple: #d1d1e4;
-  --global--color-red: #e4d1d1;
-  --global--color-orange: #e4dad1;
-  --global--color-yellow: #eeeadd;
-  --global--color-white: #fff;
-  --global--color-white-50: rgba(255, 255, 255, 0.5);
-  --global--color-white-90: rgba(255, 255, 255, 0.9);
-  --global--color-primary: var(--global--color-dark-gray);
-
-  /* Body text color, site title, footer text color. */
-  --global--color-secondary: var(--global--color-gray);
-
-  /* Headings */
-  --global--color-primary-hover: var(--global--color-primary);
-  --global--color-background: var(--global--color-green);
-
-  /* Mint, default body background */
-  --global--color-border: var(--global--color-primary);
-
-  /* Used for borders (separators) */
-
-  /* Spacing */
-  --global--spacing-unit: 20px;
-  --global--spacing-measure: unset;
-  --global--spacing-horizontal: 25px;
-  --global--spacing-vertical: 30px;
-
-  /* Elevation */
-  --global--elevation: 1px 1px 3px 0 rgba(0, 0, 0, 0.2);
-
-  /* Forms */
-  --form--font-family: var(--global--font-secondary);
-  --form--font-size: var(--global--font-size-sm);
-  --form--line-height: var(--global--line-height-body);
-  --form--color-text: var(--global--color-dark-gray);
-  --form--color-ranged: var(--global--color-secondary);
-  --form--label-weight: 500;
-  --form--border-color: var(--global--color-secondary);
-  --form--border-width: 3px;
-  --form--border-radius: 0;
-  --form--spacing-unit: calc(0.5 * var(--global--spacing-unit));
-
-  /* Cover block */
-  --cover--height: calc(15 * var(--global--spacing-vertical));
-  --cover--color-foreground: var(--global--color-white);
-  --cover--color-background: var(--global--color-black);
-
-  /* Buttons */
-  --button--color-text: var(--global--color-background);
-  --button--color-text-hover: var(--global--color-secondary);
-  --button--color-text-active: var(--global--color-secondary);
-  --button--color-background: var(--global--color-secondary);
-  --button--color-background-active: var(--global--color-background);
-  --button--font-family: var(--global--font-primary);
-  --button--font-size: var(--global--font-size-base);
-  --button--font-weight: 500;
-  --button--line-height: 1.5;
-  --button--border-width: 3px;
-  --button--border-radius: 0;
-  --button--padding-vertical: 15px;
-  --button--padding-horizontal: calc(2 * var(--button--padding-vertical));
-
-}
-
-
-/**
- * Button
- */
-.site .button,
-button,
-input[type=submit],
-input[type=reset],
-.wp-block-search .wp-block-search__button,
-.wp-block-button .wp-block-button__link,
-.wp-block-file a.wp-block-file__button {
-  border: var(--button--border-width) solid transparent;
-  border-radius: var(--button--border-radius);
-  cursor: pointer;
-  font-weight: var(--button--font-weight);
-  font-family: var(--button--font-family);
-  font-size: var(--button--font-size);
-  line-height: var(--button--line-height);
-  padding: var(--button--padding-vertical) var(--button--padding-horizontal);
-  text-decoration: none;
-}
-
-.site .button:not(:hover):not(:active):not(.has-text-color),
-button:not(:hover):not(:active):not(.has-text-color),
-input[type=submit]:not(:hover):not(:active):not(.has-text-color),
-input[type=reset]:not(:hover):not(:active):not(.has-text-color),
-.wp-block-search .wp-block-search__button:not(:hover):not(:active):not(.has-text-color),
-.wp-block-button .wp-block-button__link:not(:hover):not(:active):not(.has-text-color),
-.wp-block-file a.wp-block-file__button:not(:hover):not(:active):not(.has-text-color) {
-  color: var(--global--color-background);
-}
-
-.has-background .site .button:not(:hover):not(:active):not(.has-text-color),
-.has-background button:not(:hover):not(:active):not(.has-text-color),
-.has-background input[type=submit]:not(:hover):not(:active):not(.has-text-color),
-.has-background input[type=reset]:not(:hover):not(:active):not(.has-text-color),
-.has-background .wp-block-search .wp-block-search__button:not(:hover):not(:active):not(.has-text-color),
-.has-background .wp-block-button .wp-block-button__link:not(:hover):not(:active):not(.has-text-color),
-.has-background .wp-block-file a.wp-block-file__button:not(:hover):not(:active):not(.has-text-color) {
-  color: var(--local--color-background, var(--global--color-primary));
-}
-
-.has-background .site .button:not(:hover):not(:active):not(.has-text-color).has-background,
-.has-background button:not(:hover):not(:active):not(.has-text-color).has-background,
-.has-background input[type=submit]:not(:hover):not(:active):not(.has-text-color).has-background,
-.has-background input[type=reset]:not(:hover):not(:active):not(.has-text-color).has-background,
-.has-background .wp-block-search .wp-block-search__button:not(:hover):not(:active):not(.has-text-color).has-background,
-.has-background .wp-block-button .wp-block-button__link:not(:hover):not(:active):not(.has-text-color).has-background,
-.has-background .wp-block-file a.wp-block-file__button:not(:hover):not(:active):not(.has-text-color).has-background {
-  color: var(--global--color-primary);
-}
-
-.site .button:not(:hover):not(:active):not(.has-background),
-button:not(:hover):not(:active):not(.has-background),
-input[type=submit]:not(:hover):not(:active):not(.has-background),
-input[type=reset]:not(:hover):not(:active):not(.has-background),
-.wp-block-search .wp-block-search__button:not(:hover):not(:active):not(.has-background),
-.wp-block-button .wp-block-button__link:not(:hover):not(:active):not(.has-background),
-.wp-block-file a.wp-block-file__button:not(:hover):not(:active):not(.has-background) {
-  background-color: var(--global--color-primary);
-}
-
-.has-background .site .button:not(:hover):not(:active):not(.has-background),
-.has-background button:not(:hover):not(:active):not(.has-background),
-.has-background input[type=submit]:not(:hover):not(:active):not(.has-background),
-.has-background input[type=reset]:not(:hover):not(:active):not(.has-background),
-.has-background .wp-block-search .wp-block-search__button:not(:hover):not(:active):not(.has-background),
-.has-background .wp-block-button .wp-block-button__link:not(:hover):not(:active):not(.has-background),
-.has-background .wp-block-file a.wp-block-file__button:not(:hover):not(:active):not(.has-background) {
-  background-color: var(--local--color-primary, var(--global--color-primary));
-}
-
-.site .button:hover,
-.site .button:active,
-button:hover,
-button:active,
-input[type=submit]:hover,
-input[type=submit]:active,
-input[type=reset]:hover,
-input[type=reset]:active,
-.wp-block-search .wp-block-search__button:hover,
-.wp-block-search .wp-block-search__button:active,
-.wp-block-button .wp-block-button__link:hover,
-.wp-block-button .wp-block-button__link:active,
-.wp-block-file a.wp-block-file__button:hover,
-.wp-block-file a.wp-block-file__button:active {
-  background-color: transparent;
-  border-color: currentColor;
-  color: inherit;
-}
-
-.site .button:focus,
-button:focus,
-input[type=submit]:focus,
-input[type=reset]:focus,
-.wp-block-search .wp-block-search__button:focus,
-.wp-block-button .wp-block-button__link:focus,
-.wp-block-file a.wp-block-file__button:focus {
-  outline-offset: -6px;
-  outline: 2px dotted currentColor;
-}
-
-.site .button:disabled,
-button:disabled,
-input[type=submit]:disabled,
-input[type=reset]:disabled,
-.wp-block-search .wp-block-search__button:disabled,
-.wp-block-button .wp-block-button__link:disabled,
-.wp-block-file a.wp-block-file__button:disabled {
-  background-color: var(--global--color-white-50);
-  border-color: var(--global--color-white-50);
-  color: var(--button--color-text-active);
-}
-
-
 .kroger-krazy {
   --global--color-primary: #165688;
 }
@@ -237,7 +46,7 @@ input[type=reset]:disabled,
   --bs-gray: #6c757d;
   --bs-gray-dark: #343a40;
   --bs-primary: #0d6efd;
-  --bs-secondary: #0d6efd;
+  --bs-secondary: #6c757d;
   --bs-success: #198754;
   --bs-info: #0dcaf0;
   --bs-warning: #ffc107;
@@ -2859,7 +2668,7 @@ input[type=reset]:disabled,
 }
 .kroger-krazy .btn-secondary {
   color: #fff;
-  background-color: #165688;
+  background-color: #6c757d;
   border-color: #6c757d;
 }
 .kroger-krazy .btn-secondary:hover {
@@ -9648,8 +9457,8 @@ html body div#kkSidebar * {
   content: "";
   color: #091b59;
   display: inline-block;
-  width: 2rem;
-  height: 2rem;
+  width: 5rem;
+  height: 5rem;
   vertical-align: text-bottom;
   border: 0.25em solid;
   border-right: 0.25em solid transparent;
@@ -9665,5 +9474,47 @@ html body div#kkSidebar * {
 }
 #kk-sidebar-right {
   background: var(--global--color-primary) !important;
+}
+@supports (-webkit-appearance: none) or (-moz-appearance: none) {
+  .kroger-krazy input[type=checkbox] + label {
+    margin-left: 20px;
+  }
+  .kroger-krazy input[type=checkbox] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: absolute;
+    left: 10px;
+    width: 30px;
+    height: 30px;
+    border: var(--form--border-width) solid var(--form--border-color);
+    background: var(--global--color-white);
+  }
+  .kroger-krazy input[type=checkbox]:disabled {
+    opacity: 0.7;
+  }
+  .kroger-krazy input[type=checkbox]:focus {
+    outline-offset: 2px;
+    outline: 2px dotted var(--form--border-color);
+  }
+  .kroger-krazy input[type=checkbox]:after {
+    content: "";
+    opacity: 0;
+    display: block;
+    left: 7px;
+    top: 2px;
+    position: absolute;
+    width: 8px;
+    height: 16px;
+    border: 3px solid var(--form--color-text);
+    border-top: 0;
+    border-left: 0;
+    transform: rotate(45deg);
+  }
+  .kroger-krazy input[type=checkbox]:checked {
+    color: var(--form--color-text);
+  }
+  .kroger-krazy input[type=checkbox]:checked:after {
+    opacity: 1;
+  }
 }
 /*# sourceMappingURL=krogerkrazy-public.css.map */

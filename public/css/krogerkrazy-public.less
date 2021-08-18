@@ -31,8 +31,8 @@ html body div#kkSidebar * {
   content: "";
   color: #091b59;
   display:inline-block;
-  width:2rem;
-  height:2rem;
+  width:5rem;
+  height:5rem;
   vertical-align:text-bottom;
   border:.25em solid;
   border-right:.25em solid transparent;
@@ -48,3 +48,51 @@ html body div#kkSidebar * {
   top:20%;}
 
 #kk-sidebar-right {background: var(--global--color-primary)!important}
+
+@supports (-webkit-appearance: none) or (-moz-appearance: none) {
+  .kroger-krazy input[type=checkbox] + label {margin-left: 20px}
+  .kroger-krazy input[type=checkbox] {
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    position: absolute;
+    left: 10px;
+    width: 30px;
+    height: 30px;
+    border: var(--form--border-width) solid var(--form--border-color);
+    background: var(--global--color-white);
+  }
+
+  .kroger-krazy input[type=checkbox]:disabled
+  {
+    opacity: 0.7;
+  }
+
+  .kroger-krazy input[type=checkbox]:focus {
+    outline-offset: 2px;
+    outline: 2px dotted var(--form--border-color);
+  }
+
+  .kroger-krazy input[type=checkbox]:after {
+    content: "";
+    opacity: 0;
+    display: block;
+    left: 7px;
+    top: 2px;
+    position: absolute;
+    width: 8px;
+    height: 16px;
+    border: 3px solid var(--form--color-text);
+    border-top: 0;
+    border-left: 0;
+    transform: rotate(45deg);
+  }
+
+  .kroger-krazy input[type=checkbox]:checked {
+    color: var(--form--color-text);
+  }
+
+  .kroger-krazy input[type=checkbox]:checked:after {
+    opacity: 1;
+  }
+
+}
