@@ -1,0 +1,50 @@
+.kroger-krazy {
+  --global--color-primary: #165688;
+}
+
+.kroger-krazy {
+  @import (less) "bootstrap/bootstrap.css";
+}
+
+#kkSidebar {
+  position:relative;
+  z-index: 9999;
+}
+
+html body div#kkSidebar * {
+  font-size:18px;
+  font-weight: normal;
+  line-height: 1;
+}
+
+#kkSidebar button,
+#kkSidebar input[type="submit"],
+#kkSidebar .button,
+#kkSidebar .read-link,
+#kkSidebar .read-link:visited,
+#kkSidebar .read-link:active {
+  min-width: auto!important;
+}
+
+[v-cloak] > * { display:none; }
+[v-cloak]::before {
+  content: "";
+  color: #091b59;
+  display:inline-block;
+  width:2rem;
+  height:2rem;
+  vertical-align:text-bottom;
+  border:.25em solid;
+  border-right:.25em solid transparent;
+  border-radius:50%;
+  -webkit-animation:spinner-border .75s linear infinite;
+  animation:spinner-border .75s linear infinite
+}
+
+.btn-toggle-kk-sidebar {
+  transform: rotate(-90deg);
+  transform-origin: right bottom 0;
+  right:0;
+  top:20%;}
+
+#kk-sidebar-right {background: var(--global--color-primary)!important}

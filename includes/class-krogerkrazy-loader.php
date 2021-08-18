@@ -3,11 +3,11 @@
 /**
  * Register all actions and filters for the plugin
  *
- * @link       https://krogerkrazy.com
+ * @link       https://apisproductions.com
  * @since      1.0.0
  *
- * @package    Krogerkrazy
- * @subpackage Krogerkrazy/includes
+ * @package    Apis_Carrier_Matrix
+ * @subpackage Apis_Carrier_Matrix/includes
  */
 
 /**
@@ -17,9 +17,9 @@
  * the plugin, and register them with the WordPress API. Call the
  * run function to execute the list of actions and filters.
  *
- * @package    Krogerkrazy
- * @subpackage Krogerkrazy/includes
- * @author     Kroger Krazy <couponkatarina@gmail.com>
+ * @package    Apis_Carrier_Matrix
+ * @subpackage Apis_Carrier_Matrix/includes
+ * @author     Apis Productions <info@apisproductions.com>
  */
 class Krogerkrazy_Loader {
 
@@ -42,6 +42,15 @@ class Krogerkrazy_Loader {
 	protected $filters;
 
 	/**
+	 * The array of shortcode registered with WordPress.
+	 *
+	 * @since    1.0.0
+	 * @access   protected
+	 * @var      array    $shortcodes    The shortcode registered with WordPress to fire when the plugin loads.
+	 */
+	protected $shortcodes;
+
+	/**
 	 * Initialize the collections used to maintain the actions and filters.
 	 *
 	 * @since    1.0.0
@@ -50,6 +59,7 @@ class Krogerkrazy_Loader {
 
 		$this->actions = array();
 		$this->filters = array();
+		$this->shortcodes = array();
 
 	}
 
@@ -79,6 +89,17 @@ class Krogerkrazy_Loader {
 	 */
 	public function add_filter( $hook, $component, $callback, $priority = 10, $accepted_args = 1 ) {
 		$this->filters = $this->add( $this->filters, $hook, $component, $callback, $priority, $accepted_args );
+	}
+
+	/**
+	 * Add a new shortcode to the collection to be registered with WordPress.
+	 *
+	 * @since    1.0.0
+	 * @param    string               $hook             The name of the WordPress shortcode that is being registered.
+	 * @param    object               $component        A reference to the instance of the object on which the shortcode handler.
+	 */
+	public function add_shortcode( $hook, $component, $callback, $priority = 10, $accepted_args = 1 ) {
+		$this->shortcodes = $this->add( $this->shortcodes, $hook, $component, $callback, $priority, $accepted_args );
 	}
 
 	/**
@@ -122,6 +143,10 @@ class Krogerkrazy_Loader {
 
 		foreach ( $this->actions as $hook ) {
 			add_action( $hook['hook'], array( $hook['component'], $hook['callback'] ), $hook['priority'], $hook['accepted_args'] );
+		}
+
+		foreach ( $this->shortcodes as $hook ) {
+			add_shortcode( $hook['hook'], array( $hook['component'], $hook['callback'] ) );
 		}
 
 	}
