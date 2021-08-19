@@ -69,7 +69,6 @@ let vmSidebar = new Vue({
                 })
         },
 
-
         addCustomCoupon: function (e) {
             e.preventDefault()
             const formData = new FormData(e.target)
@@ -81,6 +80,16 @@ let vmSidebar = new Vue({
 
             this.forceRerenderForm()
         },
+
+        deleteItems() {
+            if( ! confirm("Do you really want to delete your list items?") ){
+                e.preventDefault();
+            } else {
+                this.$localStorage.savedListItems = []
+            }
+
+        },
+
 
     },
 

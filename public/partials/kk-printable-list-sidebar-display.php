@@ -9,13 +9,13 @@
                 <hr class="bg-light text-dark">
                 <div class="px-3 py-2 d-flex justify-content-between align-items-center">
                     <b-button-group>
-                        <b-button variant="light" @click="removeAllItems()" class="ml-2">
+                        <b-button variant="light" @click="deleteItems()" class="ml-2">
                             <b-icon icon="trash"></b-icon>
                         </b-button>
                         <b-button variant="light" v-b-modal.list-actions-modal>
                             <b-icon icon="printer"></b-icon>
                         </b-button>
-                        <b-button variant="light">
+                        <b-button variant="light" v-b-modal.email-form-modal>
                             <b-icon icon="envelope"></b-icon>
                         </b-button>
                     </b-button-group>
@@ -45,6 +45,7 @@
             v-model="showListActions"
             title=""
             buttonSize="sm"
+            static
             size="xl"
             hideHeaderClose
             noCloseOnBackdrop
@@ -117,6 +118,7 @@
             ref="customCouponFormModalRef"
             title=""
             buttonSize="sm"
+            static
             hideHeaderClose
             noCloseOnBackdrop
             noCloseOnEsc
@@ -154,6 +156,7 @@
             ref="customCouponEmailFormModalRef"
             title=""
             buttonSize="sm"
+            static
             hideHeaderClose
             noCloseOnBackdrop
             noCloseOnEsc
