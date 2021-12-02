@@ -1,4 +1,5 @@
 <div id="vueApp">
+
     <b-container class="mt-4" fluid>
 
         <b-col>
@@ -166,6 +167,8 @@
             noCloseOnEsc
             @close="listItems=[]"
     >
+
+
         <div :class="(is_mobile ? '' : 'd-flex justify-content-between align-items-center')">
             <b-button-toolbar class="mb-2">
                 <b-button-group>
@@ -217,8 +220,7 @@
                                :class="'list-group-item' + (item.is_heading === 'false' ? ' ' : ' bg-secondary')"
                                v-bind:key="item.order" :id="'list-item-' + i">
                 <b-button-group vertical class="item-buttons">
-                    <b-button size="sm" :variant="(item.is_heading === 'false' ? 'link' : 'outline-light')"
-                              class="handle  border-0">
+                    <b-button size="sm" :variant="(item.is_heading === 'false' ? 'link' : 'outline-light')" class="handle  border-0" @click="itemMoving(i)" v-b-modal.move-to-index-modal>
                         <b-icon icon="arrow-down-up"></b-icon>
                     </b-button>
                     <b-button size="sm" variant="link" @click="addListItem('false', i)"
@@ -239,6 +241,7 @@
                                             <b-form-input
                                                     :id="'title-'+i"
                                                     :value="decode(item.title.rendered)"
+                                                    v-model="item.title.rendered"
                                                     type="text"
                                                     placeholder="Title"
                                                     required
@@ -277,6 +280,7 @@
                                             <b-form-input
                                                     :id="'appended-'+i"
                                                     :value="decode(item.appended)"
+                                                    v-model="item.appended"
                                                     type="text"
                                                     placeholder="Appended Title Text"
                                                     required
@@ -289,11 +293,14 @@
 
                                 <b-col lg="6" class="itemDescription">
                                     <quill-editor
-                                            ref="quillEditor"
+                                            :ref="'quillEditor-'+i"
+                                            :name="'quillEditor-'+i"
                                             class="editor"
                                             v-model="item.content.rendered"
                                             :options="quillOptions"
-                                            @change="updateListItem(item.id, $event.target)"
+                                            @change="updateListItem(item.id, $event)"
+                                            @ready="onEditorReady($event)"
+                                            @blur="onEditorBlur($event)"
                                     />
                                 </b-col>
                             </template>
@@ -302,6 +309,7 @@
                                     <b-form-input
                                             :id="'title-'+i"
                                             :value="decode(item.title.rendered)"
+                                            v-model="item.title.rendered"
                                             type="text"
                                             placeholder="Title"
                                             required
@@ -342,6 +350,17 @@
         </draggable>
 
         </b-list-group>
+
+        <template #modal-footer="{ ok, cancel, hide }">
+            <span v-if="updating">
+                <b-spinner small variant="primary"></b-spinner>
+                <span class="primary">Updating Please Wait...</span>
+            </span>
+            <b-button size="sm" variant="outline-secondary" @click="hide()">
+                Close
+            </b-button>
+        </template>
+
 
 
     </b-modal>
@@ -387,6 +406,33 @@
                         text-field="name"
                 ></b-form-select>
                 <b-button type="submit" class="my-2 mr-sm-2 mb-sm-0" variant="primary">Import</b-button>
+            </b-form>
+        </div>
+    </b-modal>
+
+
+    <b-modal
+            id="move-to-index-modal"
+            buttonSize="sm"
+            noCloseOnBackdrop
+            noCloseOnEsc
+            title="Move to Heading"
+            hide-footer
+    >
+        <div class="container">
+            <b-form >
+                <b-form-select
+                        class="mb-3"
+                        selected="top"
+                        @change="moveToHeading($event)"
+                >
+                    <b-form-select-option value="top">Top</b-form-select-option>
+                    <template v-for="(item) in listItems">
+                        <b-form-select-option v-if="item.is_heading === 'true'" :value="item.order + '-top'">{{item.title.rendered}} &#8593;</b-form-select-option>
+                        <b-form-select-option v-if="item.is_heading === 'true'" :value="item.order + '-bottom'">{{item.title.rendered}} &#8595;</b-form-select-option>
+                    </template>
+                    <b-form-select-option value="bottom">Bottom</b-form-select-option>
+                </b-form-select>
             </b-form>
         </div>
     </b-modal>

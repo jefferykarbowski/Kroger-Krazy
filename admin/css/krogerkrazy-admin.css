@@ -10,6 +10,10 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
+.modal-body .ql-html-overlayContainer {
+    position: absolute
+}
+
 .taxonomy-list_headings .form-field.term-slug-wrap,
 .taxonomy-list_headings .form-field.term-parent-wrap,
 .taxonomy-list_headings .form-field.term-description-wrap,

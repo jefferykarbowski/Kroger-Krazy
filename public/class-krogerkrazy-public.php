@@ -62,6 +62,22 @@ class Krogerkrazy_Public {
 	 */
 	public function enqueue_styles() {
 
+
+		wp_register_style( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css', array(), $this->version, 'all' );
+
+		wp_register_style( 'quilljs', 'https://cdn.quilljs.com/1.3.4/quill.core.css', array(), '1.3.4', 'all' );
+
+		wp_register_style( 'quill-snow', 'https://cdn.quilljs.com/1.3.4/quill.snow.css', array(), '1.3.4', 'all' );
+
+		wp_register_style( 'quill-bubble', 'https://cdn.quilljs.com/1.3.4/quill.bubble.css', array(), '1.3.4', 'all' );
+
+		wp_register_style( 'quill-bubble', 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/github.min.css', array(), '10.1.2', 'all' );
+
+		wp_register_style( 'bootstrap-vue', '//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.css', array(), $this->version, 'all' );
+
+
+
+
 		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/krogerkrazy-public.css', array(), $this->version, 'all' );
 
 	}
@@ -72,6 +88,45 @@ class Krogerkrazy_Public {
 	 * @since    1.0.0
 	 */
 	public function enqueue_scripts() {
+
+		wp_register_script( 'vue-polyfill', '//polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver', [], '3.96.0' );
+
+		wp_register_script( 'highlight', 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/highlight.min.js', [ ], '10.1.2' );
+
+		wp_register_script( 'highlight-xml', 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/languages/xml.min.js', [ 'highlight' ], '10.1.2' );
+
+		wp_register_script( 'quilljs', '//cdn.quilljs.com/1.3.4/quill.js', [], '1.3.4' );
+
+		wp_register_script( 'quill-image-resize', 'https://cdn.jsdelivr.net/npm/quill-image-resize-module@3.0.0/image-resize.min.js', [ 'quilljs' ], '3.0.0' );
+
+		wp_register_script( 'quill-html-edit-button', plugin_dir_url( __DIR__ ) . '/admin/js/quill.htmlEditButton.min.js', [ 'quilljs' ], '2.2.6' );
+
+		wp_register_script( 'vue', '//unpkg.com/vue@latest/dist/vue.min.js', [], '2.6.12' );
+
+		wp_register_script( 'bootstrap-vue', '//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js', [], '2.20.0' );
+
+		wp_register_script( 'vue-quill-editor', 'https://cdn.jsdelivr.net/npm/vue-quill-editor@3.0.6/dist/vue-quill-editor.min.js', [], '3.0.6' );
+
+
+		wp_register_script( 'bootstrap-vue-icons', '//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue-icons.min.js', [], '1.2.0' );
+
+		wp_register_script( 'v-mask', '//cdn.jsdelivr.net/npm/v-mask/dist/v-mask.min.js', [ 'vue' ], '2.2.4' );
+
+		wp_register_script( 'v-mask-plugins', '//cdn.jsdelivr.net/npm/text-mask-addons@3.8.0/dist/textMaskAddons.min.js', [ 'v-mask' ], '3.8.0' );
+
+		wp_register_script( 'vue-html-to-paper', '//unpkg.com/vue-html-to-paper/build/vue-html-to-paper.js', [ 'vue' ] );
+
+		// Bootstrap's Datepicker is terrible.
+		wp_register_script( 'v-calendar', '//unpkg.com/v-calendar', [], '1.6.2' );
+
+		wp_register_script( 'sortable', '//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js', array( 'jquery' ), '1.8.4', true );
+
+		wp_register_script( 'vue-draggable', '//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js', array(
+			'jquery',
+			'sortable'
+		), '2.20.0', true );
+
+		wp_register_script( 'he', '//cdn.jsdelivr.net/npm/he@1.2.0/he.min.js', [], '1.2.0' );
 
 		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/krogerkrazy-public.js', array( 'vue' ), $this->version, false );
 

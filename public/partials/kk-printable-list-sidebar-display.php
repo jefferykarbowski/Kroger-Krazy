@@ -129,7 +129,7 @@
                     id="fieldset-custom-coupon-title"
                     label-for="custom-coupon-title"
             >
-                <b-form-input name="custom-coupon-title" placeholder="Title"></b-form-input>
+                <b-form-input name="custom-coupon-title" placeholder="Title" class="my-2"></b-form-input>
             </b-form-group>
 
             <b-form-group
@@ -142,6 +142,7 @@
                         rows="3"
                         max-rows="6"
                         name="custom-coupon-description"
+                        class="my-2"
                 ></b-form-textarea>
             </b-form-group>
             <b-button type="submit" variant="primary">Submit</b-button>
@@ -167,7 +168,7 @@
                     id="fieldset-email"
                     label-for="email-address"
             >
-                <b-form-input type="email" name="email-address" placeholder="Email"></b-form-input>
+                <b-form-input type="email" name="email-address" placeholder="Email" class="my-2"></b-form-input>
             </b-form-group>
             <b-button type="submit" variant="primary">Email</b-button>
         </b-form>

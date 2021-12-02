@@ -26,6 +26,8 @@ const caretTrap = '[]'
 Vue.use(VueQuillEditor)
 Vue.use(VueMask.VueMaskPlugin)
 
+Quill.register("modules/htmlEditButton", htmlEditButton)
+
 
 let vm = new Vue({
     el: '#vueApp',
@@ -35,12 +37,15 @@ let vm = new Vue({
     directives: {sortable},
     data() {
         return {
+            updating: false,
+            timeout: null,
             listName: '',
             listExpiry: '',
             listUpdating: false,
             expires: '',
             lists: [],
             dynamicLists: [],
+            headings: [],
             listSharing: false,
             listItems: [],
             tempItems: [],
@@ -112,9 +117,15 @@ let vm = new Vue({
                 theme: 'snow',
                 modules: {
                     imageResize: {},
+                    htmlEditButton: {
+                        msg: "Edit the content in HTML format",
+                        syntax: true,
+                        buttonHTML: "HTML",
+                        prependSelector: 'div.modal-body',
+                    },
                     toolbar: [
                         ['bold', 'italic', 'underline', 'strike'],
-                        ['blockquote', 'code-block'],
+                        ['blockquote'],
                         ['link', 'image'],
                         [{'list': 'ordered'}, {'list': 'bullet'}]
                     ],
@@ -127,6 +138,7 @@ let vm = new Vue({
                 sortBy: null,
                 sortByDirection: 'dsc',
             },
+            movingItem: [],
         }
     },
 
@@ -137,6 +149,7 @@ let vm = new Vue({
     },
 
     mounted() {
+
         this.fetchLists().catch(error => {
             console.error(error)
         })
@@ -145,6 +158,7 @@ let vm = new Vue({
 
 
     methods: {
+
         async fetchLists() {
             const params = '?per_page=100'
             this.lists = await fetch('/kk_api/wp/v2/lists' + params)
@@ -156,6 +170,8 @@ let vm = new Vue({
                 this.dynamicLists.push({...element, sharing: false})
             })
         },
+
+
 
         async fetchListItems(listId, append = false) {
 
@@ -169,10 +185,24 @@ let vm = new Vue({
                 filteredListItems = []
                 filteredListItems = fetchedListItems.filter(item => item.sharing.indexOf('true') > -1)
 
-                filteredListItems.forEach((item, i) => {
-                    this.duplicateListItem(item, i)
-                })
-                // this.listItems = this.listItems.concat(filteredListItems)
+                filteredListItems.sort((a, b) => b.order.localeCompare(a.order))
+
+                this.updating = true
+
+                async function addFilteredListItems(filteredListItems, instance) {
+                    for(const item of filteredListItems) {
+                        await instance.duplicateListItem(item, -1)
+                    }
+                }
+
+                addFilteredListItems(filteredListItems, this)
+                    .then(() => {
+                        console.log('all done.')
+                        this.updateListItemsOrder()
+                        this.updating = false
+                    })
+                    .catch(err => console.error("Something failed:", err))
+
                 this.$root.$emit("bv::hide::modal", "import-list-items-modal")
                 this.forceRerenderForm()
             } else {
@@ -183,9 +213,12 @@ let vm = new Vue({
                this.listSharing = true
         },
 
+
+
         submit: function () {
             this.$refs.form.submit()
         },
+
 
 
         addList(e) {
@@ -199,6 +232,7 @@ let vm = new Vue({
         },
 
 
+
         duplicateList(item, sharingItemsOnly = false) {
             const formData = new FormData()
             const date = new Date()
@@ -210,6 +244,7 @@ let vm = new Vue({
             this.createRecord('lists', this.dynamicLists, formData, '', null, item.id, sharingItemsOnly)
             this.forceRerenderForm()
         },
+
 
         importList(e) {
             e.preventDefault()
@@ -236,10 +271,12 @@ let vm = new Vue({
         },
 
 
+
         deleteList(id) {
             let formData = new FormData()
             this.deleteRecord(id, 'lists', this.dynamicLists, formData)
         },
+
 
 
         showListItemsModal(id) {
@@ -251,6 +288,7 @@ let vm = new Vue({
                 console.error(error)
             })
         },
+
 
 
         addListItem(is_heading = 'false', i = null) {
@@ -283,23 +321,117 @@ let vm = new Vue({
         },
 
 
+
         updateListItem(id, target) {
             let formData = new FormData()
             if (target.quill) {
-                formData.append('content', target.html)
+                clearTimeout(this.timeout)
+                this.timeout = setTimeout(() => {
+                    formData.append('content', target.html)
+                    this.updateRecord(id, 'list_items', this.listItems, formData)
+                }, 1000)
             } else {
                 formData.append(target.name, target.value)
+                this.updateRecord(id, 'list_items', this.listItems, formData)
             }
-            this.updateRecord(id, 'list_items', this.listItems, formData)
         },
 
+
+
+        moveArrayItemToNewIndex(arr, old_index, new_index) {
+            if (new_index >= arr.length) {
+                var k = new_index - arr.length + 1;
+                while (k--) {
+                    arr.push(undefined);
+                }
+            }
+            arr.splice(new_index, 0, arr.splice(old_index, 1)[0]);
+            return arr;
+        },
+
+
+        moveToHeading(pos) {
+
+            let position = pos.split('-')
+            let i = parseInt(position[0])
+
+            let headingIndexes = []
+            this.listItems.forEach((item, i) => {
+                if (item.is_heading === 'true') {
+                    headingIndexes.push(i)
+                }
+            })
+
+            let formData = new FormData()
+
+            if (pos != 'top' && pos != 'bottom') {
+                formData.append('heading', this.listItems[i].heading)
+            }
+
+
+            if (pos === 'top') {
+                i = 0
+                this.moveArrayItemToNewIndex(this.listItems, this.movingItem, 0 )
+                // formData.append('order', 0)
+            } else if (pos === 'bottom') {
+                i = this.listItems.length - 1
+                this.moveArrayItemToNewIndex(this.listItems, this.movingItem, this.listItems.length - 1)
+                // formData.append('order', this.listItems.length - 1)
+            } else {
+                if (position[1] === 'top') {
+                    if (i > this.movingItem) {
+                        this.moveArrayItemToNewIndex(this.listItems, this.movingItem, i)
+                    } else {
+                        this.moveArrayItemToNewIndex(this.listItems, this.movingItem, i + 1)
+                    }
+
+                    // formData.append('order', i + 1)
+                } else {
+
+                    let nextHeadingIndex = null
+                    for (let j = i + 1; j < this.listItems.length; j++) {
+                        if (this.listItems[j].is_heading === 'true') {
+                            nextHeadingIndex = j
+                            break
+                        }
+                    }
+                    console.log('nextHeadingIndex', nextHeadingIndex)
+                    console.log('nextHeadingIndex', this.listItems[nextHeadingIndex].title.rendered)
+
+                    if (nextHeadingIndex > this.movingItem) {
+                        this.moveArrayItemToNewIndex(this.listItems, this.movingItem, nextHeadingIndex - 1)
+                    } else {
+                        this.moveArrayItemToNewIndex(this.listItems, this.movingItem, nextHeadingIndex)
+                    }
+
+
+                    // formData.append('order', nextHeadingIndex - 1)
+
+
+                }
+            }
+
+
+            this.updateRecord(this.listItems[i].id, 'list_items', this.listItems, formData)
+            this.updateListItemsOrder()
+            this.$root.$emit('bv::hide::modal', 'move-to-index-modal')
+        },
+
+
+
+        itemMoving(item) {
+            this.movingItem = item
+        },
+
+
+
         shareListItem(item, sharing) {
-            console.log(sharing)
             item.sharing = sharing
             let formData = new FormData()
             formData.append('sharing', sharing)
             this.updateRecord(item.id, 'list_items', this.listItems, formData)
         },
+
 
 
         toggleSharing() {
@@ -321,7 +453,8 @@ let vm = new Vue({
         },
 
 
-        duplicateListItem(item, i) {
+
+        async duplicateListItem(item, i) {
             let newName = item.title.rendered + '-' + Date.now()
             const formData = new FormData()
             formData.append('status', 'publish')
@@ -338,43 +471,91 @@ let vm = new Vue({
             formData.append('sharing', 'false')
             const params = ''
 
-            this.createRecord('list_items', this.listItems, formData, params, i + 1)
-            this.updateListItemsOrder()
+            await this.createRecord('list_items', this.listItems, formData, params, i + 1)
         },
+
 
 
         importListItems(e) {
             e.preventDefault()
             this.fetchListItems(this.selectedListToImport, true)
+                .then(() => {
+                    this.updateListItemsOrder()
+                })
             this.$root.$emit("bv::hide::modal", "import-modal")
             this.forceRerenderForm()
         },
 
 
+
         async importHeadings() {
-            const params = '?per_page=100'
-            this.lists = await fetch('/kk_api/wp/v2/list_headings' + params)
+
+            this.updating = true
+
+            const params = '?per_page=100&order=desc'
+            this.headings = fetch('/kk_api/wp/v2/list_headings' + params)
                 .then(res => {
                     return res.json()
                 })
-                .then((headings, i) => {
-                    headings.forEach(heading => {
-                        const formData = new FormData()
-                        formData.append('status', 'publish')
-                        formData.append('title', heading.name)
-                        formData.append('is_heading', 'true')
-                        formData.append('lists', this.listId)
-                        formData.append('order', 0)
-                        formData.append('sharing', 'false')
-                        this.createRecord('list_items', this.listItems, formData, params, i)
+                .then((headings) => {
 
-                    })
+                    async function upload(headings, instance) {
+
+                        for(const heading of headings) {
+
+                            let formData = new FormData()
+                            formData.append('status', 'publish')
+                            formData.append('title', heading.name)
+                            formData.append('is_heading', 'true')
+                            formData.append('lists', instance.listId)
+                            formData.append('order', 0)
+                            formData.append('sharing', 'false')
+
+                            const data = new URLSearchParams()
+                            formData.forEach((key, value) => {
+                                data.append(value, key)
+                            })
+                            const options = {
+                                method: 'POST',
+                                headers: new Headers({
+                                    'X-WP-Nonce': krogerkrazy_ajax_obj.nonce
+                                }),
+                                body: data,
+                            }
+                            await fetch('/kk_api/wp/v2/list_items/', options)
+                                .then(res => {
+                                    return res.json()
+                                })
+                                .then(item => {
+                                    this.createdRecord = item
+                                    if (instance.listItems === this.dynamicLists) {
+                                        item.sharing = false
+                                    }
+                                    instance.listItems.unshift(item)
+                                })
+
+
+                        }
+                    }
+
+                    upload(headings, this)
+                        .then(() => {
+                            this.updateListItemsOrder()
+                            this.updating = false
+                        })
+                        .catch(err => console.error("Something failed:", err))
+
+
                 })
-                .then(() => this.updateListItemsOrder())
+
+
         },
 
 
+
+
         sortListItems(e) {
+            this.updating = true
             e.preventDefault()
             let headingIndexes = []
             this.sortItemsBy = this.sortItemsByForm.sortBy
@@ -388,11 +569,16 @@ let vm = new Vue({
                 sliced = sliced.sort((a, b)=> {
 
                     if (this.sortItemsByForm.sortBy === 'title') {
-                        if (a.title.rendered > b.title.rendered)
-                            return (this.sortItemsByForm.sortByDirection === 'asc' ? -1 : 1)
-                        if (b.title.rendered > a.title.rendered)
-                            return (this.sortItemsByForm.sortByDirection === 'asc' ? 1 : -1)
-                        return 0
+                        if (this.sortItemsByForm.sortByDirection === 'asc') {
+                            return a.title.rendered.localeCompare(b.title.rendered)
+                        } else {
+                            return b.title.rendered.localeCompare(a.title.rendered)
+                        }
+                        // if (a.title.rendered > b.title.rendered)
+                        //     return (this.sortItemsByForm.sortByDirection === 'asc' ? -1 : 1)
+                        // if (b.title.rendered > a.title.rendered)
+                        //     return (this.sortItemsByForm.sortByDirection === 'asc' ? 1 : -1)
+                        // return 0
                     } else {
                         return (
                             this.sortItemsByForm.sortByDirection === 'asc' ?
@@ -403,29 +589,38 @@ let vm = new Vue({
                 this.listItems.splice(headingIndex+1, sliced.length, ...sliced)
             })
             this.updateListItemsOrder()
+            this.updating = false
         },
 
 
 
         updateListItemsOrder() {
+            this.updating = true
             let heading = ''
             this.listItems.forEach((item, i) => {
-                if (item.is_heading === 'true') {
-                    heading = item.title.rendered
+                if (item.order != i) {
+                    if (item.is_heading === 'true') {
+                        heading = item.title.rendered
+                    }
+                    item.order = i
+                    let formData = new FormData()
+                    formData.append('order', i)
+                    formData.append('heading', heading)
+                    this.updateRecord(item.id, 'list_items', this.listItems, formData)
                 }
-                let formData = new FormData()
-                formData.append('order', i)
-                formData.append('heading', heading)
-                this.updateRecord(item.id, 'list_items', this.listItems, formData)
             })
             this.forceRerenderForm()
+            this.updating = false
         },
+
 
 
         deleteListItem(id) {
             let formData = new FormData()
             this.deleteRecord(id, 'list_items', this.listItems, formData)
+            this.updateListItemsOrder()
         },
+
 
 
         toggleDetails(row) {
@@ -445,8 +640,9 @@ let vm = new Vue({
         },
 
 
-        createRecord(endpoint = 'posts', dataset = this.items, args, params = '', insertAt = null, duplicateListId = null, sharingItemsOnly = false) {
 
+        async createRecord(endpoint = 'posts', dataset = this.items, args, params = '', insertAt = null, duplicateListId = null, sharingItemsOnly = false) {
+            this.updating = true
             const data = new URLSearchParams()
             args.forEach((key, value) => {
                 data.append(value, key)
@@ -458,7 +654,7 @@ let vm = new Vue({
                 }),
                 body: data,
             }
-            fetch('/kk_api/wp/v2/' + endpoint + '/?' + params, options)
+            await fetch('/kk_api/wp/v2/' + endpoint + '/?' + params, options)
                 .then(res => {
                     return res.json()
                 })
@@ -500,11 +696,18 @@ let vm = new Vue({
                             })
                         })
                     }
+
                 })
+                .then(() => {
+                    this.updating = false
+                })
+
         },
 
 
-        updateRecord(id, endpoint = 'posts', dataset = this.items, args) {
+
+        async updateRecord(id, endpoint = 'posts', dataset = this.items, args) {
+            this.updating = true
             const data = new URLSearchParams()
             args.forEach((key, value) => data.append(value, key))
             const params = id
@@ -525,10 +728,15 @@ let vm = new Vue({
                 .then(() => {
                     (this.listItems.every( item => item.sharing === 'true')) ? this.listSharing = true : this.listSharing = false
                 })
+                .then(() => {
+                this.updating = false
+                })
         },
 
 
-        deleteRecord(id, endpoint = 'posts', dataset = this.items, force = false, reassign = null) {
+
+        async deleteRecord(id, endpoint = 'posts', dataset = this.items, force = false, reassign = null) {
+            this.updating = true
             const data = new URLSearchParams()
             if (force)
                 data.append('force', true)
@@ -549,7 +757,11 @@ let vm = new Vue({
                 .then(
                     Vue.delete(dataset, dataset.map(e => e.id).indexOf(id))
                 )
+                .then(() => {
+                    this.updating = false
+                })
         },
+
 
 
         showConfirmDelete(id, deleteType) {
@@ -589,9 +801,11 @@ let vm = new Vue({
         },
 
 
+
         forceRerenderForm() {
             this.componentKey += 1
         },
+
 
 
         htmlDecode(input) {
@@ -600,10 +814,13 @@ let vm = new Vue({
         },
 
 
+
         encode (value) {
             if (value)
                 this.name = he.encode(value)
         },
+
+
 
         decode (value) {
             if (value)
@@ -738,6 +955,55 @@ let vm = new Vue({
         },
 
 
+
+        isValidHttpUrl(string) {
+            let url;
+
+            try {
+                url = new URL(string);
+            } catch (_) {
+                return false;
+            }
+
+            return url.protocol === "http:" || url.protocol === "https:";
+        },
+
+
+
+        onEditorBlur(quill) {
+            let _this = this
+            let tooltip = quill.theme.tooltip
+            let tooltipSave = tooltip.save
+
+            tooltip.root.querySelector("input[data-link]").value = ''
+            tooltip.root.querySelector("input[data-link]").placeholder = 'https://krogerkrazy.com'
+
+            quill.theme.tooltip.save = function() {
+                let url = this.textbox.value
+
+                jQuery(this.textbox).parents('.ql-tooltip').find('.ql-error').remove()
+
+                console.log(url)
+
+                if (_this.isValidHttpUrl(url)) {
+                    tooltipSave.call(this)
+                } else {
+                    jQuery(this.textbox).parents('.ql-tooltip').append('<div class="ql-error text-danger"><small>Please enter a full url eg: https://xxxxxxxx.com</small></div>')
+                }
+
+            };
+
+        },
+
+
+        onEditorReady(quill) {
+            // console.log('editor ready!', quill)
+            // var tooltip = quill.theme.tooltip;
+            // var input = tooltip.root.querySelector("input[data-link]");
+            // input.dataset.link = 'www.asdfasdf.com';
+        },
+
+
     },
 
     computed: {
@@ -753,6 +1019,10 @@ let vm = new Vue({
                 disabled: false,
                 ghostClass: "ghost"
             };
+        },
+
+        editor() {
+            return this.$refs.quillEditor.quill
         }
     },
 })
