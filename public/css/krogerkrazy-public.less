@@ -18,20 +18,36 @@
   background: none;
   color:#000
 }
-
-#kk_coupons label {color:#000; font-size:1.4em}
-
+.kroger-krazy .btn-light {
+  color: #fff;
+}
+.kroger-krazy .btn-outline-primary {
+  color: #fff;
+}
+.kroger-krazy blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+}
+.kroger-krazy blockquote p {
+  display: inline;
+  background: none;
+  color: #000;
+}
+#kk_coupons label {
+  color: #000;
+  font-size: 1.4em;
+}
 #kkSidebar {
-  position:relative;
+  position: relative;
   z-index: 9999;
 }
-
 html body div#kkSidebar * {
-  font-size:18px;
+  font-size: 18px;
   font-weight: normal;
   line-height: 1;
 }
-
 #kkSidebar button,
 #kkSidebar input[type="submit"],
 #kkSidebar .button,
@@ -40,32 +56,35 @@ html body div#kkSidebar * {
 #kkSidebar .read-link:active {
   min-width: auto!important;
 }
-
-[v-cloak] > * { display:none; }
+[v-cloak] > * {
+  display: none;
+}
 [v-cloak]::before {
   content: "";
   color: #091b59;
-  display:inline-block;
-  width:5rem;
-  height:5rem;
-  vertical-align:text-bottom;
-  border:.25em solid;
-  border-right:.25em solid transparent;
-  border-radius:50%;
-  -webkit-animation:spinner-border .75s linear infinite;
-  animation:spinner-border .75s linear infinite
+  display: inline-block;
+  width: 5rem;
+  height: 5rem;
+  vertical-align: text-bottom;
+  border: 0.25em solid;
+  border-right: 0.25em solid transparent;
+  border-radius: 50%;
+  -webkit-animation: spinner-border 0.75s linear infinite;
+  animation: spinner-border 0.75s linear infinite;
 }
-
 .btn-toggle-kk-sidebar {
   transform: rotate(-90deg);
   transform-origin: right bottom 0;
-  right:0;
-  top:20%;}
-
-#kk-sidebar-right {background: var(--global--color-primary)!important}
-
+  right: 0;
+  top: 20%;
+}
+#kk-sidebar-right {
+  background: var(--global--color-primary) !important;
+}
 @supports (-webkit-appearance: none) or (-moz-appearance: none) {
-  .kroger-krazy input[type=checkbox] + label {margin-left: 20px}
+  .kroger-krazy input[type=checkbox] + label {
+    margin-left: 20px;
+  }
   .kroger-krazy input[type=checkbox] {
     -webkit-appearance: none;
     -moz-appearance: none;
@@ -76,17 +95,13 @@ html body div#kkSidebar * {
     border: var(--form--border-width) solid var(--form--border-color);
     background: var(--global--color-white);
   }
-
-  .kroger-krazy input[type=checkbox]:disabled
-  {
+  .kroger-krazy input[type=checkbox]:disabled {
     opacity: 0.7;
   }
-
   .kroger-krazy input[type=checkbox]:focus {
     outline-offset: 2px;
     outline: 2px dotted var(--form--border-color);
   }
-
   .kroger-krazy input[type=checkbox]:after {
     content: "";
     opacity: 0;
@@ -101,14 +116,75 @@ html body div#kkSidebar * {
     border-left: 0;
     transform: rotate(45deg);
   }
-
   .kroger-krazy input[type=checkbox]:checked {
     color: var(--form--color-text);
   }
-
   .kroger-krazy input[type=checkbox]:checked:after {
     opacity: 1;
   }
+}
+
+
+.kroger-krazy .button:not(:hover):not(:active):not(.has-background),
+button:not(:hover):not(:active):not(.has-background),
+input[type=submit]:not(:hover):not(:active):not(.has-background),
+input[type=reset]:not(:hover):not(:active):not(.has-background),
+.wp-block-search .wp-block-search__button:not(:hover):not(:active):not(.has-background),
+.wp-block-button .wp-block-button__link:not(:hover):not(:active):not(.has-background),
+.wp-block-file a.wp-block-file__button:not(:hover):not(:active):not(.has-background) {
+  background-color: var(--global--color-primary);
+}
+
+.has-background .kroger-krazy .button:not(:hover):not(:active):not(.has-background),
+.has-background button:not(:hover):not(:active):not(.has-background),
+.has-background input[type=submit]:not(:hover):not(:active):not(.has-background),
+.has-background input[type=reset]:not(:hover):not(:active):not(.has-background),
+.has-background .wp-block-search .wp-block-search__button:not(:hover):not(:active):not(.has-background),
+.has-background .wp-block-button .wp-block-button__link:not(:hover):not(:active):not(.has-background),
+.has-background .wp-block-file a.wp-block-file__button:not(:hover):not(:active):not(.has-background) {
+  background-color: var(--local--color-primary, var(--global--color-primary));
+}
+
+.kroger-krazy .button:hover,
+.kroger-krazy .button:active,
+button:hover,
+button:active,
+input[type=submit]:hover,
+input[type=submit]:active,
+input[type=reset]:hover,
+input[type=reset]:active,
+.wp-block-search .wp-block-search__button:hover,
+.wp-block-search .wp-block-search__button:active,
+.wp-block-button .wp-block-button__link:hover,
+.wp-block-button .wp-block-button__link:active,
+.wp-block-file a.wp-block-file__button:hover,
+.wp-block-file a.wp-block-file__button:active {
+  background-color: transparent;
+  border-color: currentColor;
+  color: inherit;
+}
+
+.kroger-krazy .button:focus,
+button:focus,
+input[type=submit]:focus,
+input[type=reset]:focus,
+.wp-block-search .wp-block-search__button:focus,
+.wp-block-button .wp-block-button__link:focus,
+.wp-block-file a.wp-block-file__button:focus {
+  outline-offset: -6px;
+  outline: 2px dotted currentColor;
+}
+
+.kroger-krazy .button:disabled,
+button:disabled,
+input[type=submit]:disabled,
+input[type=reset]:disabled,
+.wp-block-search .wp-block-search__button:disabled,
+.wp-block-button .wp-block-button__link:disabled,
+.wp-block-file a.wp-block-file__button:disabled {
+  background-color: var(--global--color-white-50);
+  border-color: var(--global--color-white-50);
+  color: var(--button--color-text-active);
 }
 
 
