@@ -16,7 +16,7 @@
  * Plugin Name:       Kroger Krazy
  * Plugin URI:        https://krogerkrazy.com
  * Description:       Create coupon lists to allow users to easily select from a list of coupons that can be printed.
- * Version:           1.1.0
+ * Version:           1.1.3
  * Author:            Kroger Krazy
  * Author URI:        https://krogerkrazy.com
  * License:           GPL-2.0+
