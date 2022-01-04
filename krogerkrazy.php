@@ -82,7 +82,7 @@ function run_krogerkrazy() {
 		'kroger-krazy'
 	);
 
-	$pluginUpdateChecker->setAuthentication('55fc9310055924d57bd72f9d496d820f3036829e');
+	$pluginUpdateChecker->setAuthentication('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');
 
 	$plugin = new Krogerkrazy();
 	$plugin->run();
