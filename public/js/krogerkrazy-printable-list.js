@@ -9,7 +9,6 @@ let vm = new Vue({
             listId: null,
             componentKey: 0,
             listItems: [],
-
         }
     },
 
@@ -52,12 +51,18 @@ let vm = new Vue({
         },
 
 
-
+        openSidebar() {
+            vmSidebar.isSidebarOpen = true
+        },
 
     },
 
 
     computed: {
+
+    },
+
+    watch: {
 
     },
 })

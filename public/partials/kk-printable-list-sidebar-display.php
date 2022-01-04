@@ -4,7 +4,7 @@
         <div>
             <b-button v-b-toggle.kk-sidebar-right class="position-fixed btn-toggle-kk-sidebar">Kroger Krazy List
             </b-button>
-            <b-sidebar id="kk-sidebar-right" title="Kroger Krazy List" right shadow no-header>
+            <b-sidebar id="kk-sidebar-right" v-model="isSidebarOpen" title="Kroger Krazy List" right shadow no-header>
                 <b-img src="<?php echo plugin_dir_url( __DIR__ ); ?>images/logo.svg" fluid></b-img>
                 <hr class="bg-light text-dark">
                 <div class="px-3 py-2 d-flex justify-content-between align-items-center">

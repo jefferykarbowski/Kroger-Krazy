@@ -23,6 +23,7 @@ let vmSidebar = new Vue({
             addedHeadings: [],
             heading: '',
             showListActions: false,
+            isSidebarOpen: false,
         }
     },
 

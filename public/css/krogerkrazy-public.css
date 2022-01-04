@@ -304,6 +304,20 @@
   border: 0;
   opacity: 0.25;
 }
+
+.kroger-krazy blockquote {
+  background: #f9f9f9;
+  border-left: 10px solid #ccc;
+  margin: 1.5em 10px;
+  padding: 0.5em 10px;
+}
+
+.kroger-krazy blockquote p {
+  display: inline;
+  background: none;
+  color:#000
+}
+
 .kroger-krazy hr:not([size]) {
   height: 1px;
 }

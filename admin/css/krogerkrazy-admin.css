@@ -10,8 +10,13 @@ input[type=number] {
     -moz-appearance: textfield;
 }
 
+.posts_page_printable_lists #adminmenuwrap {
+    z-index: 100
+}
+
 .modal-body .ql-html-overlayContainer {
-    position: absolute
+    position: fixed;
+    z-index: 9999;
 }
 
 .taxonomy-list_headings .form-field.term-slug-wrap,
