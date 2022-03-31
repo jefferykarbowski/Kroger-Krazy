@@ -101,7 +101,7 @@ class Krogerkrazy_Public {
 
 		wp_register_script( 'quill-html-edit-button', plugin_dir_url( __DIR__ ) . '/admin/js/quill.htmlEditButton.min.js', [ 'quilljs' ], '2.2.6' );
 
-		wp_register_script( 'vue', '//unpkg.com/vue@latest/dist/vue.min.js', [], '2.6.12' );
+		wp_register_script( 'vue', '//cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js', [], '2.6.14' );
 
 		wp_register_script( 'bootstrap-vue', '//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js', [], '2.20.0' );
 
@@ -219,8 +219,8 @@ class Krogerkrazy_Public {
 		), $atts );
 
 		// wp_enqueue_style( 'bootstrap' );
-		 wp_enqueue_style( 'bootstrap-vue' );
-		 wp_enqueue_style( 'bootstrap-vue-icons' );
+		wp_enqueue_style( 'bootstrap-vue' );
+		wp_enqueue_style( 'bootstrap-vue-icons' );
 
 		wp_enqueue_script( 'vue-polyfill' );
 		wp_enqueue_script( 'vue' );

@@ -9744,58 +9744,25 @@ html body div#kkSidebar * {
   }
 }
 .kroger-krazy .button:not(:hover):not(:active):not(.has-background),
-button:not(:hover):not(:active):not(.has-background),
-input[type=submit]:not(:hover):not(:active):not(.has-background),
-input[type=reset]:not(:hover):not(:active):not(.has-background),
-.wp-block-search .wp-block-search__button:not(:hover):not(:active):not(.has-background),
-.wp-block-button .wp-block-button__link:not(:hover):not(:active):not(.has-background),
-.wp-block-file a.wp-block-file__button:not(:hover):not(:active):not(.has-background) {
+.kroger-krazy button:not(:hover):not(:active):not(.has-background),
+.kroger-krazy input[type=submit]:not(:hover):not(:active):not(.has-background),
+.kroger-krazy input[type=reset]:not(:hover):not(:active):not(.has-background) {
   background-color: var(--global--color-primary);
 }
-.has-background .kroger-krazy .button:not(:hover):not(:active):not(.has-background),
-.has-background button:not(:hover):not(:active):not(.has-background),
-.has-background input[type=submit]:not(:hover):not(:active):not(.has-background),
-.has-background input[type=reset]:not(:hover):not(:active):not(.has-background),
-.has-background .wp-block-search .wp-block-search__button:not(:hover):not(:active):not(.has-background),
-.has-background .wp-block-button .wp-block-button__link:not(:hover):not(:active):not(.has-background),
-.has-background .wp-block-file a.wp-block-file__button:not(:hover):not(:active):not(.has-background) {
+.has-background .kroger-krazy .button:not(:hover):not(:active):not(.has-background) {
   background-color: var(--local--color-primary, var(--global--color-primary));
 }
 .kroger-krazy .button:hover,
-.kroger-krazy .button:active,
-button:hover,
-button:active,
-input[type=submit]:hover,
-input[type=submit]:active,
-input[type=reset]:hover,
-input[type=reset]:active,
-.wp-block-search .wp-block-search__button:hover,
-.wp-block-search .wp-block-search__button:active,
-.wp-block-button .wp-block-button__link:hover,
-.wp-block-button .wp-block-button__link:active,
-.wp-block-file a.wp-block-file__button:hover,
-.wp-block-file a.wp-block-file__button:active {
+.kroger-krazy .button:active {
   background-color: transparent;
   border-color: currentColor;
   color: inherit;
 }
-.kroger-krazy .button:focus,
-button:focus,
-input[type=submit]:focus,
-input[type=reset]:focus,
-.wp-block-search .wp-block-search__button:focus,
-.wp-block-button .wp-block-button__link:focus,
-.wp-block-file a.wp-block-file__button:focus {
+.kroger-krazy .button:focus {
   outline-offset: -6px;
   outline: 2px dotted currentColor;
 }
-.kroger-krazy .button:disabled,
-button:disabled,
-input[type=submit]:disabled,
-input[type=reset]:disabled,
-.wp-block-search .wp-block-search__button:disabled,
-.wp-block-button .wp-block-button__link:disabled,
-.wp-block-file a.wp-block-file__button:disabled {
+.kroger-krazy .button:disabled {
   background-color: var(--global--color-white-50);
   border-color: var(--global--color-white-50);
   color: var(--button--color-text-active);

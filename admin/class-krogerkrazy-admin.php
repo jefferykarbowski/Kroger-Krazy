@@ -55,12 +55,12 @@ class Krogerkrazy_Admin {
 	}
 
 
-    public function admin_rest_list_headings_query($query_vars, $request) {
-		    $query_vars['orderby']  = 'meta_value_num';
-		    $query_vars['meta_key'] = 'tax_position';
-		    $query_vars['order']    = 'DESC';
-		    return $query_vars;
-	    }
+	public function admin_rest_list_headings_query($query_vars, $request) {
+		$query_vars['orderby']  = 'meta_value_num';
+		$query_vars['meta_key'] = 'tax_position';
+		$query_vars['order']    = 'DESC';
+		return $query_vars;
+	}
 
 
 
@@ -86,7 +86,7 @@ class Krogerkrazy_Admin {
 
 		wp_register_script( 'quill-html-edit-button', plugin_dir_url( __DIR__ ) . '/admin/js/quill.htmlEditButton.min.js', [ 'quilljs', 'highlight' ], '2.2.6' );
 
-		wp_register_script( 'vue', '//unpkg.com/vue@latest/dist/vue.min.js', [], '2.6.12' );
+		wp_register_script( 'vue', '//cdn.jsdelivr.net/npm/vue@2.6.14/dist/vue.js', [], '2.6.14' );
 
 		wp_register_script( 'bootstrap-vue', '//unpkg.com/bootstrap-vue@latest/dist/bootstrap-vue.min.js', [], '2.20.0' );
 
@@ -209,24 +209,24 @@ class Krogerkrazy_Admin {
 	public function add_meta_box_callback() {
 		{
 			?>
-			<fieldset id="pembed_postbox">
-				<div>
-					<label>Title</label>
-					<input type="text" id="pembed_title" name="pembed_title" value="" style="width: 100%;" />
-				</div>
-				<div>
-					<label>Description</label>
-					<textarea id="pembed_desc" name="pembed_desc" value="" style="width: 100%; height: 80px;" /></textarea>
-				</div>
-				<div>
-					<label>Final Price</label>
-					<input type="text" id="pembed_final_price" name="pembed_final_price" value="" style="width: 100%;" />
-				</div>
-				<div style="margin-top: 4px;">
-					<input id="pembed_create" type="button" value="&laquo; Insert Embed Code" class='button' onClick="pembed_insertCode();"/>
-				</div>
-			</fieldset>
-			<script>
+            <fieldset id="pembed_postbox">
+                <div>
+                    <label>Title</label>
+                    <input type="text" id="pembed_title" name="pembed_title" value="" style="width: 100%;" />
+                </div>
+                <div>
+                    <label>Description</label>
+                    <textarea id="pembed_desc" name="pembed_desc" value="" style="width: 100%; height: 80px;" /></textarea>
+                </div>
+                <div>
+                    <label>Final Price</label>
+                    <input type="text" id="pembed_final_price" name="pembed_final_price" value="" style="width: 100%;" />
+                </div>
+                <div style="margin-top: 4px;">
+                    <input id="pembed_create" type="button" value="&laquo; Insert Embed Code" class='button' onClick="pembed_insertCode();"/>
+                </div>
+            </fieldset>
+            <script>
                 function pembed_insertCode()
                 {
                     var code = "";
@@ -249,7 +249,7 @@ class Krogerkrazy_Admin {
                     code += "]";
                     parent.tinyMCE.activeEditor.execCommand("mceInsertContent",false, code);
                 }
-			</script>
+            </script>
 			<?php
 
 		}
