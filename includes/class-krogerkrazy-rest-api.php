@@ -227,7 +227,7 @@ class KrogerKrazy_Rest_API extends WP_REST_Controller {
 
 
 	public function filter_rest_list_item_collection_params($params) {
-		$params['per_page']['maximum'] = 500;
+		$params['per_page']['maximum'] = 1000;
 		return $params;
 	}
 
