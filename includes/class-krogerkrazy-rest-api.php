@@ -211,8 +211,14 @@ class KrogerKrazy_Rest_API extends WP_REST_Controller {
 			$query_vars["orderby"]  = "meta_value_num";
 			$query_vars["meta_key"] = "order";
 		}
+		return $query_vars;
+	}
+
+
+	public function filter_rest_list_query( $query_vars, $request ) {
+		$orderby = $request->get_param( 'orderitemsby' );
 		if ( isset( $orderby ) && $orderby === 'date' ) {
-			$query_vars["order"]    = "ASC";
+			$query_vars["order"]    = "DESC";
 			$query_vars["orderby"]  = "meta_value";
 			$query_vars["meta_key"] = "updated";
 		}
