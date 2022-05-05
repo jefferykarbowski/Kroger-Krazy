@@ -219,6 +219,7 @@
             <b-list-group-item v-for="(item, i) in listItems"
                                :class="'list-group-item' + (item.is_heading === 'false' ? ' ' : ' bg-secondary')"
                                v-bind:key="item.order" :id="'list-item-' + i">
+
                 <b-button-group vertical class="item-buttons">
                     <b-button size="sm" :variant="(item.is_heading === 'false' ? 'link' : 'outline-light')" class="handle  border-0" @click="itemMoving(i)" v-b-modal.move-to-index-modal>
                         <b-icon icon="arrow-down-up"></b-icon>
@@ -246,6 +247,7 @@
                                                     placeholder="Title"
                                                     required
                                                     name="title"
+													debounce=1000
                                             ></b-form-input>
                                         </b-col>
                                     </b-row>
@@ -259,6 +261,7 @@
                                                         placeholder="Price"
                                                         required
                                                         name="price"
+														debounce=1000
                                                 ></b-form-input>
                                             </b-input-group>
                                         </b-col>
@@ -271,6 +274,7 @@
                                                         placeholder="Final Price"
                                                         required
                                                         name="final_price"
+														debounce=1000
                                                 ></b-form-input>
                                             </b-input-group>
                                         </b-col>
@@ -286,6 +290,22 @@
                                                     required
                                                     name="appended"
                                                     description="e.g. (thru xx/xx)"
+													debounce=1000
+                                            ></b-form-input>
+                                        </b-col>
+                                    </b-row>
+									<b-row class="my-1">
+                                        <b-col>
+                                            <b-form-input
+                                                    :id="'price_appendum-'+i"
+                                                    :value="decode(item.price_appendum)"
+                                                    v-model="item.price_appendum"
+                                                    type="text"
+                                                    placeholder="Appended Price Text"
+                                                    required
+                                                    name="price_appendum"
+                                                    description="e.g. (EACH)"
+													debounce=1000
                                             ></b-form-input>
                                         </b-col>
                                     </b-row>
@@ -296,9 +316,9 @@
                                             :ref="'quillEditor-'+i"
                                             :name="'quillEditor-'+i"
                                             class="editor"
-                                            v-model="item.content.rendered"
+                                            :content="getItemContent(item.id)"
                                             :options="quillOptions"
-                                            @change="updateListItem(item.id, $event)"
+                                            @change="handleKeydown(item.id, $event)"
                                             @ready="onEditorReady($event)"
                                             @blur="onEditorBlur($event)"
                                     />
@@ -314,6 +334,7 @@
                                             placeholder="Title"
                                             required
                                             name="title"
+											debounce=1000
                                     ></b-form-input>
                                 </b-col>
                             </template>

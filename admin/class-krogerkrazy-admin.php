@@ -69,10 +69,11 @@ class Krogerkrazy_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_scripts() {
-
-
-
+	public function enqueue_scripts($hook_suffix) {
+		
+		if ($hook_suffix != 'posts_page_printable_lists') {
+			return;
+		}
 
 		wp_register_script( 'vue-polyfill', '//polyfill.io/v3/polyfill.min.js?features=es2015%2CIntersectionObserver', [], '3.96.0' );
 
@@ -112,6 +113,8 @@ class Krogerkrazy_Admin {
 		), '2.20.0', true );
 
 		wp_register_script( 'he', '//cdn.jsdelivr.net/npm/he@1.2.0/he.min.js', [], '1.2.0' );
+		
+		wp_register_script( 'lodash-js', '//cdn.jsdelivr.net/npm/lodash@4.17.21/lodash.min.js', array( 'vue' ), '4.17.21'  );
 
 
 		wp_enqueue_script('vue-polyfill');
@@ -128,10 +131,16 @@ class Krogerkrazy_Admin {
 		wp_enqueue_script('sortable');
 		wp_enqueue_script('vue-draggable');
 		wp_enqueue_script('vue');
+		wp_enqueue_script('lodash-js');
 		wp_enqueue_script('v-mask');
 		wp_enqueue_script('v-mask-plugins');
 		wp_enqueue_script('he');
-		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/krogerkrazy-admin.js', array( 'vue' ), null, true );
+
+        // get current date and time as a variable to version the js for development
+        $current_date = date('YmdHis');
+
+
+		wp_enqueue_script( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'js/krogerkrazy-admin.js', array( 'vue' ), $this->version, true );
 		wp_localize_script(
 			$this->plugin_name,
 			'krogerkrazy_ajax_obj',
@@ -148,15 +157,19 @@ class Krogerkrazy_Admin {
 	 *
 	 * @since    1.0.0
 	 */
-	public function enqueue_styles() {
+	public function enqueue_styles($hook_suffix) {
+ 
+		if ($hook_suffix != 'posts_page_printable_lists') {
+			return;
+		}
 
 		wp_register_style( 'bootstrap', 'https://cdn.jsdelivr.net/npm/bootstrap@4.5.3/dist/css/bootstrap.min.css', array(), $this->version, 'all' );
 
-		wp_register_style( 'quilljs', 'https://cdn.quilljs.com/1.3.4/quill.core.css', array(), '1.3.4', 'all' );
+		wp_register_style( 'quilljs', 'https://cdn.quilljs.com/1.3.4/quill.core.css', array(), '1.3.6', 'all' );
 
-		wp_register_style( 'quill-snow', 'https://cdn.quilljs.com/1.3.4/quill.snow.css', array(), '1.3.4', 'all' );
+		wp_register_style( 'quill-snow', 'https://cdn.quilljs.com/1.3.4/quill.snow.css', array(), '1.3.6', 'all' );
 
-		wp_register_style( 'quill-bubble', 'https://cdn.quilljs.com/1.3.4/quill.bubble.css', array(), '1.3.4', 'all' );
+		wp_register_style( 'quill-bubble', 'https://cdn.quilljs.com/1.3.4/quill.bubble.css', array(), '1.3.6', 'all' );
 
 		wp_register_style( 'quill-bubble', 'https://cdnjs.cloudflare.com/ajax/libs/highlight.js/10.1.2/styles/github.min.css', array(), '10.1.2', 'all' );
 
@@ -169,7 +182,7 @@ class Krogerkrazy_Admin {
 		wp_enqueue_style( 'bootstrap' );
 		wp_enqueue_style( 'bootstrap-vue' );
 		wp_enqueue_style( 'bootstrap-vue-icons' );
-		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/krogerkrazy-admin.css', array(), null, 'all' );
+		wp_enqueue_style( $this->plugin_name, plugin_dir_url( __FILE__ ) . 'css/krogerkrazy-admin.css', array(), $this->version, 'all' );
 
 	}
 
@@ -216,7 +229,7 @@ class Krogerkrazy_Admin {
                 </div>
                 <div>
                     <label>Description</label>
-                    <textarea id="pembed_desc" name="pembed_desc" value="" style="width: 100%; height: 80px;" /></textarea>
+                    <textarea id="pembed_desc" name="pembed_desc" value="" style="width: 100%; height: 80px;"></textarea>
                 </div>
                 <div>
                     <label>Final Price</label>
@@ -255,5 +268,47 @@ class Krogerkrazy_Admin {
 		}
 
 	}
+
+
+
+    public function update_list_items_order() {
+
+
+        if( isset( $_REQUEST['list_items_order'] ) ) {
+
+
+            // create json response
+            $response = array();
+
+
+            // decode $listItems from json
+            $listItems = json_decode( stripslashes( $_REQUEST['list_items_order'] ) );
+
+            foreach( $listItems as $item ) {
+
+                update_post_meta( $item->id, 'order', $item->order );
+                update_post_meta( $item->id, 'heading', $item->heading );
+
+                // update response
+                $response[] = array(
+                    'id' => $item->id,
+                    'order' => $item->order,
+                    'heading' => $item->heading
+                );
+
+            }
+
+            echo json_encode( $response );
+
+
+        } else {
+            echo "failure";
+        }
+
+	    die();
+
+    }
+
+
 
 }

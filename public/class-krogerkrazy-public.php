@@ -153,7 +153,7 @@ class Krogerkrazy_Public {
 		wp_enqueue_script( $this->plugin_name . '-printable-list-sidebar', plugin_dir_url( __FILE__ ) . 'js/krogerkrazy-printable-list-sidebar.js', array(
 			'vue',
 			'vue-html-to-paper'
-		), null, true );
+		), $this->version, true );
 
 		wp_localize_script(
 			$this->plugin_name . '-printable-list-sidebar',
@@ -211,11 +211,11 @@ class Krogerkrazy_Public {
 	}
 
 
-	public function kk_deal_callback( $atts ) {
+	public function kk_deal_callback( $atts, $content = null ) {
 		$a = shortcode_atts( array(
 			'title'       => '',
-			'description' => '',
 			'final_price' => '',
+			'append_price_text' => '',
 		), $atts );
 
 		// wp_enqueue_style( 'bootstrap' );
@@ -228,7 +228,8 @@ class Krogerkrazy_Public {
 		wp_enqueue_script( 'bootstrap-vue-icons' );
 
 		wp_enqueue_script( $this->plugin_name . '-krogerkrazy-deal', plugin_dir_url( __FILE__ ) . 'js/krogerkrazy-deal.js', array( 'vue' ), null, true );
-
+ 
+		
 		ob_start();
 		include plugin_dir_path( __FILE__ ) . 'partials/krogerkrazy-deal.php';
 

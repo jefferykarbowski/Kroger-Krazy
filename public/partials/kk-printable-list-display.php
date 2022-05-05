@@ -17,9 +17,9 @@
 
                     <template v-if="item.is_heading === 'false'">
 
-                        <b-form-checkbox :value="item"  class="pl-0"><strong><span v-html="item.title.rendered"></span><span v-if="item.price"> - ${{item.price}}</span> <span v-if="item.appended" v-html="item.appended"></span><br></strong>
+                        <b-form-checkbox :value="item"  class="pl-0"><strong><span v-html="item.title.rendered"></span><span v-if="item.price"> - ${{formatPrice(item.price)}}</span> <span v-if="item.appended" v-html="item.appended"></span><br></strong>
                             <span v-if="item.content.rendered && item.content.rendered != ''" v-html="item.content.rendered"></span>
-                            <span v-if="item.final_price">Final cost is as low as ${{item.final_price}}</span>
+                            <span v-if="item.final_price">Final cost is as low as ${{formatPrice(item.final_price)}} {{item.price_appendum}}</span>
                         </b-form-checkbox>
 
                     </template>

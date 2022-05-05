@@ -40,8 +40,7 @@ let vmSidebar = new Vue({
         async printList() {
             await this.$htmlToPaper('preparedListForPrint');
         },
-
-
+		
         async emailList(e) {
 
             e.preventDefault()
@@ -75,7 +74,7 @@ let vmSidebar = new Vue({
             const formData = new FormData(e.target)
             const values = [...formData.values()]
 
-            this.$localStorage.customListItems.unshift({'title': values[0], 'price': values[1], 'content': values[2]})
+            this.$localStorage.customListItems.unshift({'title': values[0], 'content': values[1]})
 
             this.$refs.customCouponFormModalRef.hide()
 

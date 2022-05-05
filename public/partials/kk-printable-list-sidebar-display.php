@@ -2,7 +2,7 @@
 
     <template>
         <div>
-            <b-button v-b-toggle.kk-sidebar-right class="position-fixed btn-toggle-kk-sidebar">Kroger Krazy List
+            <b-button v-b-toggle.kk-sidebar-right :class="[$localStorage.savedListItems.length > 0 ? 'active' : '', 'position-fixed btn-toggle-kk-sidebar']">Kroger Krazy List
             </b-button>
             <b-sidebar id="kk-sidebar-right" v-model="isSidebarOpen" title="Kroger Krazy List" right shadow no-header>
                 <b-img src="<?php echo plugin_dir_url( __DIR__ ); ?>images/logo.svg" fluid></b-img>
@@ -20,7 +20,7 @@
                         </b-button>
                     </b-button-group>
                     <b-button variant="light" v-b-toggle.kk-sidebar-right>
-                        <b-icon icon="arrow-right"></b-icon>
+                        <b-icon icon="arrow-left"></b-icon>
                     </b-button>
                 </div>
                 <div class="px-3 py-2">
@@ -29,7 +29,7 @@
                                            v-for="(item, i) in $localStorage.savedListItems"
                                            v-if="item.is_heading !== 'true'">
                             <div><span v-html="item.title.rendered"></span><span
-                                        v-if="item.price"> - ${{item.price}}</span></div>
+                                        v-if="item.price"> - ${{formatPrice(item.price)}}</span></div>
                             <b-button variant="outline-primary" class="ml-2" size="sm">
                                 <b-icon @click="removeItem(i)" icon="trash-fill"></b-icon>
                             </b-button>
@@ -55,11 +55,11 @@
 
         <template #modal-header="{ close }">
             <b-button-group>
-                <b-button variant="primary" @click="printList">
+                <b-button variant="secondary" @click="printList">
                     <b-icon icon="printer"></b-icon>
                     Print My List
                 </b-button>
-                <b-button variant="info" v-b-modal.form-modal>
+                <b-button variant="secondary" v-b-modal.form-modal>
                     <b-icon icon="plus"></b-icon>
                     Add My Own Items
                 </b-button>
@@ -81,11 +81,18 @@
             <b-list-group-item v-for="(item, i) in customPrintableList" class="d-flex justify-content-between align-items-center">
                 <div>
                     <template>
-                        <strong>
-                            <b-icon icon="square" font-scale="1.5"></b-icon>
-                            <span v-html="item.title"></span>
-                        </strong><br>
-                        <span v-html="item.content"></span>
+						<div class="d-flex">
+							<div>
+								<strong><b-icon icon="square" font-scale="1.5"></b-icon></strong>
+							</div>
+							
+                            <div class="ml-4"  style="margin-left:10px">
+								<strong><span v-html="item.title.rendered"></span><span v-if="item.price"> - ${{formatPrice(item.price)}}</span> <span v-if="item.appended" v-html="item.appended"></span><br></strong>
+                            <span v-if="item.content.rendered && item.content.rendered != ''" v-html="item.content.rendered"></span>
+                            <span v-if="item.final_price">Final cost is as low as ${{formatPrice(item.final_price)}} {{item.price_appendum}}</span>
+							</div>
+                           
+						</div>
                     </template>
                 </div>
                 <b-button variant="outline-primary" class="ml-2" size="sm">
@@ -96,11 +103,18 @@
             <template v-if="printableList.length > 0">
                 <b-list-group-item v-for="(item, i) in printableList">
                     <template v-if="item.is_heading !== 'true'">
-                        <strong>
-                            <b-icon icon="square" font-scale="1.5"></b-icon>
-                            <span v-html="item.title.rendered"></span> - <span v-if="item.price">${{item.price}}</span>
-                            <span v-if="item.appended" v-html="item.appended"></span></strong><br><span
-                                v-html="item.content.rendered"></span>
+							<div class="d-flex">
+							<div>
+								<strong><b-icon icon="square" font-scale="1.5"></b-icon></strong>
+							</div>
+							
+                            <div class="ml-4" style="margin-left:10px">
+								<strong><span v-html="item.title.rendered"></span><span v-if="item.price"> - ${{formatPrice(item.price)}}</span> <span v-if="item.appended" v-html="item.appended"></span><br></strong>
+                            <span v-if="item.content.rendered && item.content.rendered != ''" v-html="item.content.rendered"></span>
+                            <span v-if="item.final_price">Final cost is as low as ${{formatPrice(item.final_price)}} {{item.price_appendum}}</span>
+							</div>
+                           
+						</div>
                     </template>
                     <template v-else>
                         <h4 class="mb-0"><span v-html="item.heading"></span></h4>

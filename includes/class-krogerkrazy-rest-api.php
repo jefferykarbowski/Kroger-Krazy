@@ -37,6 +37,7 @@ class KrogerKrazy_Rest_API extends WP_REST_Controller {
 			'is_heading',
 			'heading',
 			'appended',
+			'price_appendum',
 			'order',
 			'sharing',
 		);
@@ -100,6 +101,14 @@ class KrogerKrazy_Rest_API extends WP_REST_Controller {
 			'show_in_rest' => true,
 		);
 		register_meta( 'list_item', 'appended', $args );
+		
+		$args = array(
+			'type'         => 'string',
+			'description'  => 'Appending Price Text',
+			'single'       => true,
+			'show_in_rest' => true,
+		);
+		register_meta( 'list_item', 'price_appendum', $args );
 
 		$args = array(
 			'type'         => 'boolean',
@@ -202,7 +211,11 @@ class KrogerKrazy_Rest_API extends WP_REST_Controller {
 			$query_vars["orderby"]  = "meta_value_num";
 			$query_vars["meta_key"] = "order";
 		}
-
+		if ( isset( $orderby ) && $orderby === 'date' ) {
+			$query_vars["order"]    = "ASC";
+			$query_vars["orderby"]  = "meta_value";
+			$query_vars["meta_key"] = "updated";
+		}
 		return $query_vars;
 	}
 

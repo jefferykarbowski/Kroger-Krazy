@@ -36,6 +36,11 @@ Vue.mixin({
             return value.toUpperCase()
         },
 
+		formatPrice(value) {
+			let val = (value/1).toFixed(2)
+			return val.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ".")
+    	},
+		
         removeItem(i) {
             this.$localStorage.savedListItems.splice(i, 1)
         },

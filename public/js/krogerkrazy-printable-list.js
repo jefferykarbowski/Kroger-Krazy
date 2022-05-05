@@ -39,7 +39,6 @@ let vm = new Vue({
             this.$refs.form.submit()
         },
 
-
         forceRerenderForm() {
             this.componentKey += 1
         },

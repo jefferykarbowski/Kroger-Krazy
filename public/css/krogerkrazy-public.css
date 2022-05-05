@@ -31,7 +31,7 @@
   /* rtl:end:remove */
   /*# sourceMappingURL=bootstrap.css.map */
 }
-.kroger-krazy :root {
+:root {
   /* Font Family */
   --global--font-primary: var(--font-headings, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif);
   --global--font-secondary: var(--font-base, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif);
@@ -9657,11 +9657,11 @@
 }
 #kk_coupons label {
   color: #000;
-  font-size: 1.4em;
+  font-size: 1em;
 }
 #kkSidebar {
   position: relative;
-  z-index: 9999;
+  z-index: 99999999;
 }
 html body div#kkSidebar * {
   font-size: 18px;
@@ -9676,6 +9676,9 @@ html body div#kkSidebar * {
 #kkSidebar .read-link:active {
   min-width: auto!important;
 }
+#kkSidebar .modal-content .btn {color: #fff}
+#preparedListForPrint a {text-decoration: none!important; color:#212529}
+
 [v-cloak] > * {
   display: none;
 }
@@ -9693,12 +9696,15 @@ html body div#kkSidebar * {
   animation: spinner-border 0.75s linear infinite;
 }
 .btn-toggle-kk-sidebar {
-  transform: rotate(-90deg);
+  transform: rotate(90deg);
   transform-origin: right bottom 0;
-  right: 0;
+  right: 28px;
   top: 20%;
 }
-#kk-sidebar-right {
+.btn-toggle-kk-sidebar.active {
+  /*left:28px;*/
+}
+#kk-sidebar-left, #kk-sidebar-right {
   background: var(--global--color-primary) !important;
 }
 @supports (-webkit-appearance: none) or (-moz-appearance: none) {

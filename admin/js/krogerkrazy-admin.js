@@ -116,8 +116,8 @@ let vm = new Vue({
             quillOptions: {
                 theme: 'snow',
                 modules: {
-                    imageResize: {},
-                    htmlEditButton: {
+                    imageResize: {},   
+					htmlEditButton: {
                         msg: "Edit the content in HTML format",
                         syntax: true,
                         buttonHTML: "HTML",
@@ -143,8 +143,16 @@ let vm = new Vue({
     },
 
 
-    created() {
+   	created() {
 
+        this.startedTyping = _.debounce(this.startedTyping, 1000, {
+            leading: true,
+            trailing: false,
+        })
+        this.stoppedTyping = _.debounce(this.stoppedTyping, 1000, {
+            leading: false,
+            trailing: true,
+        })
 
     },
 
@@ -160,7 +168,7 @@ let vm = new Vue({
     methods: {
 
         async fetchLists() {
-            const params = '?per_page=100'
+            const params = '?per_page=100&orderitemsby=date'
             this.lists = await fetch('/kk_api/wp/v2/lists' + params)
                 .then(res => {
                     return res.json()
@@ -291,7 +299,7 @@ let vm = new Vue({
 
 
 
-        addListItem(is_heading = 'false', i = null) {
+        addListItem(is_heading = 'false', i = 0) {
             const formData = new FormData()
             formData.append('status', 'publish')
             formData.append('title', '')
@@ -299,6 +307,7 @@ let vm = new Vue({
             formData.append('final_price', '')
             formData.append('is_heading', is_heading)
             formData.append('appended', '')
+			formData.append('price_appendum', '')
             formData.append('content', '')
             formData.append('lists', this.listId)
             formData.append('order', 0)
@@ -316,16 +325,25 @@ let vm = new Vue({
                 formData.append('heading', heading.title.rendered)
                 i = i + 1
             }
-            this.createRecord('list_items', this.listItems, formData, params, i)
-            this.updateListItemsOrder()
-        },
 
+            this.createRecord('list_items', this.listItems, formData, params, i)
+                .then(() => {
+                    for (let i = 0; i < this.listItems.length; i++) {
+                        this.listItems[i].order = i
+                    }
+                    this.updateListItemsOrder(true)
+                })
+
+
+
+        },
 
 
         updateListItem(id, target) {
             let formData = new FormData()
             if (target.quill) {
-                clearTimeout(this.timeout)
+				if (this.timeout)
+                	clearTimeout(this.timeout)
                 this.timeout = setTimeout(() => {
                     formData.append('content', target.html)
                     this.updateRecord(id, 'list_items', this.listItems, formData)
@@ -335,7 +353,31 @@ let vm = new Vue({
                 this.updateRecord(id, 'list_items', this.listItems, formData)
             }
         },
+		
+		
+		handleKeydown(id, { quill, html, text }) {
+            this.startedTyping()
+            this.stoppedTyping(id, { quill, html, text })
+        },
 
+        startedTyping() {
+        },
+
+        stoppedTyping(id, { quill, html, text }) {
+            // update the list item with the id with the html as the content
+            this.listItems.forEach(item => {
+                if (item.id === id) {
+                    item.content.rendered = html
+                }
+            })
+            this.updateListItem(id, { quill, html, text })
+        },
+
+
+        getItemContent(itemId) {
+            let item = this.listItems.find(item => item.id === itemId)
+            return item.content.rendered
+        },
 
 
         moveArrayItemToNewIndex(arr, old_index, new_index) {
@@ -465,6 +507,7 @@ let vm = new Vue({
             formData.append('is_heading', item.is_heading)
             formData.append('heading', item.heading)
             formData.append('appended', item.appended)
+			formData.append('price_appendum', item.price_appendum)
             formData.append('content', item.content.rendered)
             formData.append('lists', this.listId)
             formData.append('order', i + 1)
@@ -594,23 +637,46 @@ let vm = new Vue({
 
 
 
-        updateListItemsOrder() {
+        updateListItemsOrder(updateAll = false) {
             this.updating = true
             let heading = ''
+
+            // create empty array to push list item order to
+            let listItemsOrder = []
+
             this.listItems.forEach((item, i) => {
-                if (item.order != i) {
+                if (item.order != i || updateAll === true) {
                     if (item.is_heading === 'true') {
                         heading = item.title.rendered
                     }
                     item.order = i
-                    let formData = new FormData()
-                    formData.append('order', i)
-                    formData.append('heading', heading)
-                    this.updateRecord(item.id, 'list_items', this.listItems, formData)
+                    listItemsOrder.push({
+                        id: item.id,
+                        order: i,
+                        heading: heading
+                    })
                 }
             })
-            this.forceRerenderForm()
-            this.updating = false
+
+            let formData = new FormData();
+
+            listItemsOrder = JSON.stringify(listItemsOrder)
+
+            formData.append( 'action', 'update_list_items_order' );
+            formData.append( 'list_items_order', listItemsOrder );
+
+            fetch(krogerkrazy_ajax_obj.ajaxurl, {
+                method: 'POST',
+                body: formData
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data)
+                    this.updating = false
+                })
+                .catch(error => console.log(error))
+
+
         },
 
 
@@ -687,6 +753,7 @@ let vm = new Vue({
                                 formData.append('is_heading', item.is_heading)
                                 formData.append('heading', item.heading)
                                 formData.append('appended', item.appended)
+								formData.append('price_appendum', item.price_appendum)
                                 formData.append('content', item.content.rendered)
                                 formData.append('lists', listId)
                                 formData.append('order', item.order)
