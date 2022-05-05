@@ -10,7 +10,7 @@
  *
  * @link              https://krogerkrazy.com
  * @since             1.0.0
- * @package           Krogerkrazy
+ * @package           Krogerkrazy000
  *
  * @wordpress-plugin
  * Plugin Name:       Kroger Krazy

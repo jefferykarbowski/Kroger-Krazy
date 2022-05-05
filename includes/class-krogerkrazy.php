@@ -353,7 +353,7 @@ class Krogerkrazy {
 		$this->loader->add_action( 'rest_api_init', $krogerkrazy_rest_api, 'register_routes' );
 		$this->loader->add_filter( 'rest_list_item_query', $krogerkrazy_rest_api, 'filter_rest_list_item_query', 10, 2 );
 		$this->loader->add_filter( 'rest_list_query', $krogerkrazy_rest_api, 'filter_rest_list_query', 10, 2 );
-
+		$this->loader->add_filter( 'rest_list_item_collection_params', $krogerkrazy_rest_api, 'filter_rest_list_item_collection_params', 10, 1 );
 	}
 
 
