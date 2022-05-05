@@ -242,7 +242,6 @@
                                             <b-form-input
                                                     :id="'title-'+i"
                                                     :value="decode(item.title.rendered)"
-                                                    v-model="item.title.rendered"
                                                     type="text"
                                                     placeholder="Title"
                                                     required
@@ -284,7 +283,6 @@
                                             <b-form-input
                                                     :id="'appended-'+i"
                                                     :value="decode(item.appended)"
-                                                    v-model="item.appended"
                                                     type="text"
                                                     placeholder="Appended Title Text"
                                                     required
@@ -299,7 +297,6 @@
                                             <b-form-input
                                                     :id="'price_appendum-'+i"
                                                     :value="decode(item.price_appendum)"
-                                                    v-model="item.price_appendum"
                                                     type="text"
                                                     placeholder="Appended Price Text"
                                                     required
@@ -329,7 +326,6 @@
                                     <b-form-input
                                             :id="'title-'+i"
                                             :value="decode(item.title.rendered)"
-                                            v-model="item.title.rendered"
                                             type="text"
                                             placeholder="Title"
                                             required

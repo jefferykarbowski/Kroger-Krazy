@@ -12027,7 +12027,7 @@
 .posts_page_printable_lists .b-dropdown-form.disabled,
 .posts_page_printable_lists .b-dropdown-form:disabled {
   outline: 0!important;
-  color: #6c757d;
+  color: #adb5bd;
   pointer-events: none;
 }
 .posts_page_printable_lists .b-dropdown-text {
@@ -12667,13 +12667,6 @@
 .posts_page_printable_lists .b-form-spinbutton.disabled {
   pointer-events: none;
 }
-.posts_page_printable_lists .b-form-tags .b-form-tags-list {
-  margin-top: -0.25rem;
-}
-.posts_page_printable_lists .b-form-tags .b-form-tags-list .b-form-tag,
-.posts_page_printable_lists .b-form-tags .b-form-tags-list .b-from-tags-field {
-  margin-top: 0.25rem;
-}
 .posts_page_printable_lists .b-form-tags.focus {
   color: #495057;
   background-color: #fff;
@@ -12691,6 +12684,16 @@
 }
 .posts_page_printable_lists .b-form-tags.disabled {
   background-color: #e9ecef;
+}
+.posts_page_printable_lists .b-form-tags-list {
+  margin-top: -0.25rem;
+}
+.posts_page_printable_lists .b-form-tags-list .b-form-tag,
+.posts_page_printable_lists .b-form-tags-list .b-form-tags-field {
+  margin-top: 0.25rem;
+}
+.posts_page_printable_lists .b-form-tags-input {
+  color: #495057;
 }
 .posts_page_printable_lists .b-form-tag {
   font-size: 75%;
