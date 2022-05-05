@@ -1,4 +1,4 @@
-<div id="kkDeal" class="kroger-krazy kk-deal" v-cloak>
+<div id="<?php echo $a['unique_id']; ?>" class="kroger-krazy kk-deal" v-cloak>
     <b-form-checkbox-group
             id="kk_coupons"
             v-model="$localStorage.savedListItems"
@@ -16,8 +16,8 @@
     </b-form-checkbox-group>
 </div>
 <script>
-let vm = new Vue({
-	el: '#kkDeal',
+new Vue({
+	el: '#<?php echo $a['unique_id']; ?>',
 	data() {
 		return {
 			item: {

@@ -212,10 +212,13 @@ class Krogerkrazy_Public {
 
 
 	public function kk_deal_callback( $atts, $content = null ) {
+		$id = uniqid();
+
 		$a = shortcode_atts( array(
 			'title'       => '',
 			'final_price' => '',
 			'append_price_text' => '',
+			'unique_id' => 'kkdeal_' . $id,
 		), $atts );
 
 		// wp_enqueue_style( 'bootstrap' );
