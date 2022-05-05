@@ -10,13 +10,13 @@
  *
  * @link              https://krogerkrazy.com
  * @since             1.0.0
- * @package           Krogerkrazy000
+ * @package           Krogerkrazy
  *
  * @wordpress-plugin
  * Plugin Name:       Kroger Krazy
  * Plugin URI:        https://krogerkrazy.com
  * Description:       Create coupon lists to allow users to easily select from a list of coupons that can be printed.
- * Version:           1.3.8
+ * Version:           1.3.9
  * Author:            Kroger Krazy
  * Author URI:        https://krogerkrazy.com
  * License:           GPL-2.0+
@@ -35,7 +35,7 @@ if ( ! defined( 'WPINC' ) ) {
  * Start at version 1.0.0 and use SemVer - https://semver.org
  * Rename this for your plugin and update it as you release new versions.
  */
-define( 'KROGERKRAZY_VERSION', '1.3.8' );
+define( 'KROGERKRAZY_VERSION', '1.3.9' );
 
 /**
  * The code that runs during plugin activation.
