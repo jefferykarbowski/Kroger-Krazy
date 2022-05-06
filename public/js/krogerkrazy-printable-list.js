@@ -27,7 +27,7 @@ let vm = new Vue({
     methods: {
 
         async fetchListItems(listId) {
-            const params = '?lists=' + listId + '&per_page=100&orderitemsby=order'
+            const params = '?lists=' + listId + '&per_page=1000&orderitemsby=order'
             this.listItems = await fetch('/kk_api/wp/v2/list_items' + params)
                 .then(res => {
                     return res.json()
