@@ -1,6 +1,18 @@
 <div id="kkPrintableList" class="kroger-krazy" list-id="<?php echo $a['id']; ?>" v-cloak>
 
 
+    <b-form-checkbox
+            v-model="allSelected"
+            :indeterminate="indeterminate"
+            aria-describedby="kk_coupons"
+            aria-controls="kk_coupons"
+            @change="toggleAll"
+    >
+        {{ allSelected ? 'Remove all coupons' : 'Add all coupons' }}
+    </b-form-checkbox>
+
+
+
     <b-form-checkbox-group
             id="kk_coupons"
             v-model="$localStorage.savedListItems"
@@ -11,6 +23,8 @@
     >
 
         <b-list-group >
+
+
 
             <template v-for="(item, i) in listItems">
                 <b-list-group-item :class="(item.is_heading === 'true' ? 'bg-light' : 'bg-white') + ' flex-column align-items-start'" >

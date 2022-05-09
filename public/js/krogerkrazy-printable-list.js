@@ -9,6 +9,8 @@ let vm = new Vue({
             listId: null,
             componentKey: 0,
             listItems: [],
+            allSelected: false,
+            indeterminate: false
         }
     },
 
@@ -54,6 +56,11 @@ let vm = new Vue({
             vmSidebar.isSidebarOpen = true
         },
 
+        toggleAll(checked) {
+            this.$localStorage.savedListItems = checked ? this.listItems.slice() : []
+        }
+
+
     },
 
 
@@ -62,6 +69,19 @@ let vm = new Vue({
     },
 
     watch: {
+
+        selected(newValue, oldValue) {
+            if (newValue.length === 0) {
+                this.indeterminate = false
+                this.allSelected = false
+            } else if (newValue.length === this.listItems.length) {
+                this.indeterminate = false
+                this.allSelected = true
+            } else {
+                this.indeterminate = true
+                this.allSelected = false
+            }
+        }
 
     },
 })
