@@ -631,7 +631,7 @@ let vm = new Vue({
                 })
                 this.listItems.splice(headingIndex+1, sliced.length, ...sliced)
             })
-            this.updateListItemsOrder()
+            this.updateListItemsOrder(true)
             this.updating = false
         },
 
